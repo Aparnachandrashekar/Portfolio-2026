@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { RESUME_URL } from "@/lib/projects";
+import { LINKEDIN_URL, RESUME_URL } from "@/lib/projects";
 
 type NavLink = { label: string; href: string; external?: boolean };
 
 const NAV_LINKS: NavLink[] = [
+  { label: "About", href: "#about" },
   { label: "Work", href: "#work" },
   { label: "Certifications", href: "#certifications" },
-  { label: "About", href: "#about" },
   { label: "Resume", href: RESUME_URL, external: true },
 ];
 
@@ -64,13 +64,37 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop links */}
-        <nav style={{ display: "flex", gap: "32px", alignItems: "center" }}>
-          {NAV_LINKS.map(({ label, href, external }) => (
-            <DesktopLink key={label} href={href} external={external}>
-              {label}
-            </DesktopLink>
-          ))}
-        </nav>
+        <div className="nav-right" style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+          <nav style={{ display: "flex", gap: "24px", alignItems: "center" }}>
+            {NAV_LINKS.map(({ label, href, external }) => (
+              <DesktopLink key={label} href={href} external={external}>
+                {label}
+              </DesktopLink>
+            ))}
+          </nav>
+          <a
+            href={LINKEDIN_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-linkedin-btn"
+            style={{
+              fontFamily: "'Satoshi', sans-serif",
+              fontSize: "13px",
+              fontWeight: 500,
+              padding: "8px 16px",
+              borderRadius: "100px",
+              border: "1.5px solid var(--accent)",
+              background: "var(--accent)",
+              color: "#fff",
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+              flexShrink: 0,
+              transition: "opacity 0.2s ease",
+            }}
+          >
+            LinkedIn
+          </a>
+        </div>
 
         {/* Hamburger — mobile only */}
         <button
@@ -126,7 +150,6 @@ export default function Navbar() {
               color: "var(--text)",
               textDecoration: "none",
               letterSpacing: "-0.02em",
-              /* 44px+ touch target */
               display: "flex",
               alignItems: "center",
               minHeight: "56px",
@@ -135,11 +158,31 @@ export default function Navbar() {
             {label}
           </a>
         ))}
+        <a
+          href={LINKEDIN_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => setMenuOpen(false)}
+          style={{
+            fontFamily: "'Satoshi', sans-serif",
+            fontSize: "clamp(18px, 5vw, 22px)",
+            fontWeight: 500,
+            color: "#fff",
+            background: "var(--accent)",
+            textDecoration: "none",
+            padding: "12px 28px",
+            borderRadius: "100px",
+            marginTop: "8px",
+          }}
+        >
+          LinkedIn
+        </a>
       </div>
 
       <style suppressHydrationWarning>{`
+        .nav-linkedin-btn:hover { opacity: 0.88; }
         @media (max-width: 640px) {
-          header nav { display: none !important; }
+          .nav-right { display: none !important; }
           .hamburger { display: flex !important; }
         }
       `}</style>

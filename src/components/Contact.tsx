@@ -43,7 +43,7 @@ export default function Contact() {
         </h2>
 
         <a
-          href="mailto:your@email.com"
+          href="mailto:aparnacs008@gmail.com"
           onMouseEnter={() => setCtaHovered(true)}
           onMouseLeave={() => setCtaHovered(false)}
           style={{

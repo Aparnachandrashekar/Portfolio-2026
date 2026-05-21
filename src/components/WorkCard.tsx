@@ -1,13 +1,14 @@
 import { CATEGORY_ACCENT, type Project } from "@/lib/projects";
 
 export default function WorkCard({ project }: { project: Project }) {
-  const { title, href, category, orientation, issuer, inProgress } = project;
+  const { title, description, href, category, orientation, issuer, inProgress } = project;
   const accent      = CATEGORY_ACCENT[category];
   const isLandscape = orientation === 'landscape';
   const isLink      = href.startsWith('http');
+  const hasDescription = Boolean(description);
 
   const cardStyle: React.CSSProperties = {
-    flex: `0 0 ${isLandscape ? '360px' : '230px'}`, height: '300px', borderRadius: '22px',
+    flex: `0 0 ${isLandscape ? '360px' : '280px'}`, minHeight: hasDescription ? '340px' : '300px', height: 'auto', borderRadius: '22px',
     background: accent, position: 'relative', overflow: 'hidden',
     display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
     padding: '22px', textDecoration: 'none', color: '#fff',
@@ -36,10 +37,18 @@ export default function WorkCard({ project }: { project: Project }) {
       <div style={{ position: 'relative' }}>
         <p style={{
           fontFamily: "'Clash Display', sans-serif", fontSize: isLandscape ? '20px' : '17px',
-          fontWeight: 600, lineHeight: 1.25, letterSpacing: '-0.01em', margin: issuer ? '0 0 4px' : '0 0 6px',
+          fontWeight: 600, lineHeight: 1.25, letterSpacing: '-0.01em', margin: '0 0 6px',
         }}>
           {title}
         </p>
+        {description && (
+          <p className="proj-card-desc" style={{
+            fontFamily: "'Satoshi', sans-serif", fontSize: '12px', fontWeight: 400,
+            lineHeight: 1.55, opacity: 0.88, margin: '0 0 8px',
+          }}>
+            {description}
+          </p>
+        )}
         {issuer && (
           <p style={{
             fontFamily: "'Satoshi', sans-serif", fontSize: '12px', fontWeight: 500,

@@ -87,7 +87,7 @@ export default function Work() {
             fontWeight: 600, color: "var(--text)", lineHeight: 1.08,
             letterSpacing: "-0.02em", margin: "0 0 36px",
           }}>
-            Selected projects.
+            Featured Projects
           </h2>
 
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>

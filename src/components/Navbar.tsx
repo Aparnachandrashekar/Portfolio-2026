@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { RESUME_URL } from "@/lib/projects";
 
 type NavLink = { label: string; href: string; external?: boolean };
 
@@ -9,8 +10,7 @@ const NAV_LINKS: NavLink[] = [
   { label: "Work", href: "#work" },
   { label: "Certifications", href: "#certifications" },
   { label: "About", href: "#about" },
-  { label: "Why Me", href: "#why-me" },
-  { label: "Resume", href: "#", external: true },
+  { label: "Resume", href: RESUME_URL, external: true },
 ];
 
 export default function Navbar() {

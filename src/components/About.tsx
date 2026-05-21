@@ -3,19 +3,18 @@
 import Script from "next/script";
 import { useRef } from "react";
 
-
 const VALUE_CARDS = [
   {
-    label: "People-first thinking",
-    description: "Every decision starts with understanding real human behaviour.",
+    label: "Structure first",
+    description: "Ambiguity gets a framework before it gets an answer.",
   },
   {
-    label: "Structured rigour",
-    description: "From PRDs to pitches — clarity and evidence in every output.",
+    label: "Builder's mindset",
+    description: "Brings design thinking and build instinct to the same problem.",
   },
   {
-    label: "Cross-domain curiosity",
-    description: "Psychology, org design, and product — connected, not siloed.",
+    label: "Curious about what shapes people",
+    description: "Products, systems, psychology. Always tracing back to what drives the behaviour.",
   },
 ];
 
@@ -33,12 +32,10 @@ export default function About() {
 
     gsap.registerPlugin(ST);
 
-    // Set initial hidden states
     gsap.set(leftRef.current, { opacity: 0, x: -48 });
     gsap.set(rightRef.current, { opacity: 0, x: 48 });
     gsap.set(labelRef.current, { clipPath: "inset(0 0 100% 0)" });
 
-    // Section label — bottom-to-top clip-path wipe
     gsap.fromTo(
       labelRef.current,
       { clipPath: "inset(0 0 100% 0)" },
@@ -82,9 +79,18 @@ export default function About() {
     );
   };
 
+  const bodyStyle: React.CSSProperties = {
+    fontFamily: "'Satoshi', sans-serif",
+    fontSize: "clamp(15px, 2vw, 18px)",
+    fontWeight: 400,
+    color: "var(--text-secondary)",
+    lineHeight: 1.8,
+    margin: 0,
+    maxWidth: "560px",
+  };
+
   return (
     <>
-      {/* GSAP core may already be loaded by Hero; Next.js deduplicates by src */}
       <Script
         src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
         strategy="afterInteractive"
@@ -104,18 +110,9 @@ export default function About() {
           paddingRight: "clamp(24px, 5vw, 80px)",
         }}
       >
-        <div
-          style={{
-            maxWidth: "1200px",
-            margin: "0 auto",
-          }}
-        >
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div className="about-grid">
-            {/* Left column */}
-            <div
-              ref={leftRef}
-              className="about-left"
-            >
+            <div ref={leftRef} className="about-left">
               <span
                 ref={labelRef}
                 style={{
@@ -146,45 +143,28 @@ export default function About() {
                 People first.
               </h2>
 
-              <p
-                style={{
-                  fontFamily: "'Satoshi', sans-serif",
-                  fontSize: "clamp(15px, 2vw, 18px)",
-                  fontWeight: 400,
-                  color: "var(--text-secondary)",
-                  lineHeight: 1.8,
-                  margin: 0,
-                  maxWidth: "560px",
-                }}
-              >
-                With a background in psychology and organizational development,
-                I approach product management by starting with people first. I
-                currently build internal tools and analyse consumer products
-                through case studies, redesigns and feature deep dives. This
-                portfolio showcases my approach to product thinking, having
-                product analyses, PRDs and optimization strategies across
-                platforms with 150m+ users.
-              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                <p style={bodyStyle}>
+                  With a background in psychology and organizational development, I approach
+                  product management by starting with people: understanding how and why they
+                  interact with the systems they operate in, and what that means for the
+                  products we build. Three years of building internal tools put that thinking
+                  into practice across the full product lifecycle.
+                </p>
+                <p style={bodyStyle}>
+                  One of the key builds here is Thoughtful, a natural language reminder tool
+                  that integrates with Google Calendar, WhatsApp, and Google Meet, meeting
+                  users where they are. Alongside that, I analyse consumer products through
+                  case studies, redesigns, PRDs, and feature deep dives — through a behavioral
+                  and technical lens. This portfolio is that body of work.
+                </p>
+              </div>
             </div>
 
-            {/* Right column */}
-            <div
-              ref={rightRef}
-              className="about-right"
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "16px",
-                }}
-              >
+            <div ref={rightRef} className="about-right">
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 {VALUE_CARDS.map(({ label, description }) => (
-                  <ValueCard
-                    key={label}
-                    label={label}
-                    description={description}
-                  />
+                  <ValueCard key={label} label={label} description={description} />
                 ))}
               </div>
             </div>

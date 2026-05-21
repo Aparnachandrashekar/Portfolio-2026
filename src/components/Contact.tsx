@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { LINKEDIN_URL, RESUME_URL } from "@/lib/projects";
 
 export default function Contact() {
   const [ctaHovered, setCtaHovered] = useState(false);
@@ -41,25 +42,12 @@ export default function Contact() {
           Let&apos;s build something.
         </h2>
 
-        <p
-          style={{
-            fontFamily: "'Satoshi', sans-serif",
-            fontSize: "clamp(15px, 2vw, 18px)",
-            fontWeight: 400,
-            color: "#7A7670",
-            lineHeight: 1.65,
-            margin: "0 0 44px 0",
-            maxWidth: "440px",
-          }}
-        >
-          Open to PM roles at startups and product-led companies.
-        </p>
-
         <a
           href="mailto:your@email.com"
           onMouseEnter={() => setCtaHovered(true)}
           onMouseLeave={() => setCtaHovered(false)}
           style={{
+            marginTop: "44px",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
@@ -86,12 +74,12 @@ export default function Contact() {
       {/* Bottom row — copyright + social links */}
       <div className="contact-bottom">
         <span className="contact-copy">
-          © 2025 Aparna Chandrashekar
+          © 2026 Aparna Chandrashekar
         </span>
 
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
           <a
-            href="#"
+            href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="contact-social"
@@ -102,7 +90,7 @@ export default function Contact() {
             /
           </span>
           <a
-            href="#"
+            href={RESUME_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="contact-social"

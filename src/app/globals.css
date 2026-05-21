@@ -3,23 +3,27 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #F8F6F1;
+  --surface: #F0EDE4;
+  --text: #1A1A1A;
+  --text-secondary: #7A7670;
+  --accent: #D4522A;
+  --accent-2: #2B3D6B;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: "Satoshi", sans-serif;
+  /* Prevent horizontal overflow on mobile */
+  overflow-x: hidden;
 }
 
+/* Remove the per-page smooth scroll declarations */
 @layer utilities {
   .text-balance {
     text-wrap: balance;

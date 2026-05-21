@@ -155,8 +155,8 @@ export default function About() {
                   One of the key builds here is Thoughtful, a natural language reminder tool
                   that integrates with Google Calendar, WhatsApp, and Google Meet, meeting
                   users where they are. Alongside that, I analyse consumer products through
-                  case studies, redesigns, PRDs, and feature deep dives — through a behavioral
-                  and technical lens. This portfolio is that body of work.
+                  case studies, redesigns, PRDs, and feature deep dives, through a behavioral
+                  and analytical lens. This portfolio is that body of work.
                 </p>
               </div>
             </div>

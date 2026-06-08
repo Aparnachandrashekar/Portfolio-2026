@@ -2,9 +2,14 @@
 
 import Image from "next/image";
 import Script from "next/script";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-const NAME_WORDS = ["Aparna", "Chandrashekar"];
+const FULL_NAME = "Aparna Chandrashekar";
+
+const HERO_PHOTOS = [
+  { src: "/aparna-headshot.png", objectPosition: "center 18%" },
+  { src: "/aparna-headshot-2.png", objectPosition: "center 22%" },
+] as const;
 
 export default function Hero() {
   const charRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -96,68 +101,22 @@ export default function Hero() {
             padding: "0 clamp(24px, 5vw, 80px)",
           }}
         >
-          <div style={{ maxWidth: "1000px", width: "100%" }}>
-            <div
-              className="hero-intro"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "clamp(28px, 5vw, 56px)",
-                flexWrap: "wrap",
-              }}
-            >
-              <h1
-                style={{
-                  fontFamily: "'Clash Display', sans-serif",
-                  fontSize: "clamp(52px, 8vw, 100px)",
-                  fontWeight: 600,
-                  color: "var(--text)",
-                  lineHeight: 1.05,
-                  letterSpacing: "-0.025em",
-                  margin: 0,
-                  flex: "1 1 280px",
-                }}
-              >
-                {NAME_WORDS.map((word, wi) => {
-                  const offset = NAME_WORDS
-                    .slice(0, wi)
-                    .reduce((n, w) => n + w.length, 0);
-                  return (
-                    <div key={wi} style={{ display: "block" }}>
-                      {word.split("").map((char, ci) => (
-                        <span
-                          key={ci}
-                          ref={(el) => { charRefs.current[offset + ci] = el; }}
-                          style={{ display: "inline-block" }}
-                        >
-                          {char}
-                        </span>
-                      ))}
-                    </div>
-                  );
-                })}
+          <div style={{ width: "100%" }}>
+            <div className="hero-name-row">
+              <h1 className="hero-name">
+                {FULL_NAME.split("").map((char, i) => (
+                  <span
+                    key={i}
+                    ref={(el) => { charRefs.current[i] = el; }}
+                    style={{ display: "inline-block" }}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </span>
+                ))}
               </h1>
 
-              <div
-                ref={photoRef}
-                style={{
-                  flexShrink: 0,
-                  width: "clamp(128px, 18vw, 196px)",
-                  height: "clamp(128px, 18vw, 196px)",
-                  borderRadius: "50%",
-                  overflow: "hidden",
-                  border: "2px solid var(--surface)",
-                  boxShadow: "0 12px 40px rgba(0,0,0,0.12)",
-                }}
-              >
-                <Image
-                  src="/aparna-headshot.png"
-                  alt="Aparna Chandrashekar"
-                  width={196}
-                  height={196}
-                  priority
-                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }}
-                />
+              <div ref={photoRef} className="hero-photo">
+                <HeroPhotoRotator />
               </div>
             </div>
 
@@ -224,10 +183,89 @@ export default function Hero() {
       </section>
 
       <style suppressHydrationWarning>{`
-        @media (max-width: 560px) {
-          .hero-intro { flex-direction: column-reverse; align-items: flex-start; }
+        .hero-name-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          gap: clamp(24px, 5vw, 96px);
+          font-size: clamp(40px, 7.5vw, 100px);
+        }
+        .hero-name {
+          font-family: 'Clash Display', sans-serif;
+          font-size: 1em;
+          font-weight: 600;
+          color: var(--text);
+          line-height: 1;
+          letter-spacing: -0.025em;
+          margin: 0;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .hero-photo {
+          position: relative;
+          flex-shrink: 0;
+          width: 1em;
+          height: 1em;
+          margin-left: auto;
+          border-radius: 50%;
+          overflow: hidden;
+          border: 2px solid var(--surface);
+          box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
+        }
+        .hero-photo-layer {
+          position: absolute;
+          inset: 0;
+          opacity: 0;
+          transition: opacity 1.2s ease-in-out;
+        }
+        .hero-photo-layer.active {
+          opacity: 1;
+        }
+        @media (max-width: 720px) {
+          .hero-name-row {
+            font-size: clamp(32px, 9vw, 52px);
+            gap: clamp(16px, 4vw, 32px);
+          }
         }
       `}</style>
+    </>
+  );
+}
+
+function HeroPhotoRotator() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setActiveIndex((i) => (i + 1) % HERO_PHOTOS.length);
+    }, 5000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return (
+    <>
+      {HERO_PHOTOS.map((photo, i) => (
+        <div
+          key={photo.src}
+          className={`hero-photo-layer${i === activeIndex ? " active" : ""}`}
+          aria-hidden={i !== activeIndex}
+        >
+          <Image
+            src={photo.src}
+            alt="Aparna Chandrashekar"
+            width={100}
+            height={100}
+            priority={i === 0}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: photo.objectPosition,
+            }}
+          />
+        </div>
+      ))}
     </>
   );
 }

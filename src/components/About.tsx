@@ -145,10 +145,10 @@ export default function About() {
 
               <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
                 <p style={bodyStyle}>
-                  At the root of every successful product is a person. How they think, what
+                  At the root of every successful product is a person - how they think, what
                   they want, why they do what they do. Scale that up and you have groups,
-                  societies, economies, which is why I believe understanding people is the
-                  start.
+                  societies and economies, which is why I believe understanding people is the
+                  starting point of building impactful products.
                 </p>
                 <p style={bodyStyle}>
                   My background in psychology and organizational development helps me approach

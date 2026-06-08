@@ -5,7 +5,7 @@ import { useRef } from "react";
 
 const VALUE_CARDS = [
   {
-    label: "Structure first",
+    label: "Structure",
     description: "Ambiguity gets a framework before it gets an answer.",
   },
   {
@@ -145,11 +145,18 @@ export default function About() {
 
               <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
                 <p style={bodyStyle}>
-                  With a background in psychology and organizational development, I approach
-                  product management by starting with people: understanding how and why they
-                  interact with the systems they operate in, and what that means for the
-                  products we build. Three years of building internal tools put that thinking
-                  into practice across the full product lifecycle.
+                  At the root of every successful product is a person. How they think, what
+                  they want, why they do what they do. Scale that up and you have groups,
+                  societies, economies, which is why I believe understanding people is the
+                  start.
+                </p>
+                <p style={bodyStyle}>
+                  My background in psychology and organizational development helps me approach
+                  product management with empathy, systems thinking, and a deep focus on human
+                  behavior: specifically how and why people interact with the systems they
+                  operate in, and what that means for the products we build. I have three years
+                  of experience building and shipping tools that put this thinking into practice,
+                  from 0 → 1.
                 </p>
                 <p style={bodyStyle}>
                   One of the key builds here is Thoughtful, a natural language reminder tool

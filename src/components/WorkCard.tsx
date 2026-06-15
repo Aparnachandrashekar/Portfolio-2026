@@ -18,7 +18,7 @@ export default function WorkCard({ project }: { project: Project }) {
 
   const inner = (
     <>
-      <div style={{
+      <div className="proj-card-shine" style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
         background: 'radial-gradient(ellipse at 15% 15%, rgba(255,255,255,0.14) 0%, transparent 65%)',
       }} />

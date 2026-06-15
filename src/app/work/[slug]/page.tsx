@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Script from "next/script";
 import { notFound } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { gsap } from "@/lib/gsap";
+import { prefersReducedMotion, revealUp } from "@/lib/motion";
 import { PROJECTS, CATEGORY_ACCENT, CATEGORY_LABEL } from "@/lib/projects";
 
 // ─── section data ─────────────────────────────────────────────────────────────
@@ -62,11 +63,14 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
   const accent = CATEGORY_ACCENT[category];
   const tags = [CATEGORY_LABEL[category]];
 
+  const pageRef = useRef<HTMLDivElement>(null);
+  const heroContentRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const backLinkRef = useRef<HTMLAnchorElement>(null);
+  const tagsRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const [activeSection, setActiveSection] = useState<SectionId>(SECTIONS[0].id);
 
-  // Track active section via IntersectionObserver
   useEffect(() => {
     const observers = SECTIONS.map((section, i) => {
       const el = sectionRefs.current[i];
@@ -76,7 +80,6 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
         ([entry]) => {
           if (entry.isIntersecting) setActiveSection(section.id);
         },
-        // Fires when the section top enters the viewport's middle band
         { rootMargin: "-15% 0px -65% 0px", threshold: 0 }
       );
       obs.observe(el);
@@ -86,66 +89,43 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
     return () => observers.forEach((obs) => obs?.disconnect());
   }, []);
 
-  // Hero title entrance
-  const runHeroAnimation = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const gsap = (window as any).gsap;
-    if (!gsap || !titleRef.current) return;
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      revealUp(backLinkRef.current);
+      revealUp(titleRef.current, { delay: 0.05 });
+      revealUp(tagsRef.current?.querySelectorAll("span") ?? [], {
+        delay: 0.1,
+        stagger: 0.05,
+      });
 
-    gsap.fromTo(
-      titleRef.current,
-      { opacity: 0, y: 16 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: "power3.out",
-        clearProps: "transform",
+      if (heroContentRef.current && !prefersReducedMotion()) {
+        gsap.fromTo(
+          heroContentRef.current,
+          { y: 0 },
+          {
+            y: -8,
+            ease: "none",
+            scrollTrigger: {
+              trigger: heroContentRef.current,
+              start: "top top",
+              end: "bottom top",
+              scrub: 0.8,
+            },
+          },
+        );
       }
-    );
-  };
 
-  // Section scroll-triggered entrances
-  const runScrollTriggers = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const gsap = (window as any).gsap;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const ST = (window as any).ScrollTrigger;
-    if (!gsap || !ST) return;
+      sectionRefs.current.forEach((el) => {
+        if (!el) return;
+        revealUp(el, { trigger: el });
+      });
+    }, pageRef);
 
-    gsap.registerPlugin(ST);
-
-    sectionRefs.current.forEach((el) => {
-      if (!el) return;
-      gsap.fromTo(
-        el,
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.65,
-          ease: "power3.out",
-          clearProps: "transform",
-          scrollTrigger: { trigger: el, start: "top 84%" },
-        }
-      );
-    });
-  };
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <>
-      <Script
-        src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
-        strategy="afterInteractive"
-        onReady={runHeroAnimation}
-      />
-      <Script
-        src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
-        strategy="afterInteractive"
-        onReady={runScrollTriggers}
-      />
-
-      {/* ── Hero band ──────────────────────────────────────────────────────── */}
+    <div ref={pageRef}>
       <div
         style={{
           width: "100%",
@@ -158,13 +138,11 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
           padding: `28px clamp(24px, 5vw, 80px) 36px`,
         }}
       >
-        {/* Back link */}
-        <Link href="/#work" className="back-link">
+        <Link ref={backLinkRef} href="/#work" className="back-link" style={{ opacity: 0 }}>
           ← All work
         </Link>
 
-        {/* Bottom cluster: breadcrumb + title + tags */}
-        <div>
+        <div ref={heroContentRef}>
           <p
             style={{
               fontFamily: "'Satoshi', sans-serif",
@@ -193,7 +171,7 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
             {title}
           </h1>
 
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+          <div ref={tagsRef} style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
             {tags.map((tag) => (
               <span
                 key={tag}
@@ -205,6 +183,7 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
                   background: "var(--bg)",
                   borderRadius: "100px",
                   padding: "4px 10px",
+                  opacity: 0,
                 }}
               >
                 {tag}
@@ -214,7 +193,6 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
         </div>
       </div>
 
-      {/* ── Sticky sidebar (desktop only) ──────────────────────────────────── */}
       <nav aria-label="Page sections" className="case-sidebar">
         {SECTIONS.map(({ id, label }) => {
           const isActive = activeSection === id;
@@ -228,7 +206,6 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
                 fontWeight: isActive ? 500 : 400,
               }}
             >
-              {/* Active dot */}
               <span
                 style={{
                   display: "inline-block",
@@ -247,7 +224,6 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
         })}
       </nav>
 
-      {/* ── Body ───────────────────────────────────────────────────────────── */}
       <div
         style={{
           maxWidth: "780px",
@@ -323,7 +299,6 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
       </div>
 
       <style suppressHydrationWarning>{`
-        /* Back link */
         .back-link {
           display: inline-flex;
           align-items: center;
@@ -338,7 +313,6 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
         }
         .back-link:hover { color: var(--text); }
 
-        /* Sidebar */
         .case-sidebar {
           position: fixed;
           left: 40px;
@@ -366,12 +340,10 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
           color: var(--text) !important;
         }
 
-        /* Only show sidebar on wide viewports where it won't overlap content */
         @media (max-width: 1180px) {
           .case-sidebar { display: none; }
         }
-
       `}</style>
-    </>
+    </div>
   );
 }

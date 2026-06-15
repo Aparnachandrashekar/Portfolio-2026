@@ -1,13 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { gsap } from "@/lib/gsap";
+import { revealUp } from "@/lib/motion";
+import { useEffect, useRef, useState } from "react";
 import { LINKEDIN_URL, RESUME_URL } from "@/lib/projects";
 
 export default function Contact() {
   const [ctaHovered, setCtaHovered] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const ctaRef = useRef<HTMLAnchorElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      revealUp(headingRef.current, { trigger: sectionRef.current });
+      revealUp(ctaRef.current, { trigger: sectionRef.current, delay: 0.08 });
+      revealUp(bottomRef.current, { trigger: sectionRef.current, delay: 0.14 });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <footer
+      ref={sectionRef}
       id="contact"
       style={{
         background: "var(--text)",
@@ -17,7 +34,6 @@ export default function Contact() {
         paddingRight: "clamp(24px, 5vw, 80px)",
       }}
     >
-      {/* Centred content block */}
       <div
         style={{
           maxWidth: "800px",
@@ -29,6 +45,7 @@ export default function Contact() {
         }}
       >
         <h2
+          ref={headingRef}
           style={{
             fontFamily: "'Clash Display', sans-serif",
             fontSize: "clamp(36px, 5vw, 72px)",
@@ -43,6 +60,7 @@ export default function Contact() {
         </h2>
 
         <a
+          ref={ctaRef}
           href="mailto:aparnacs008@gmail.com"
           onMouseEnter={() => setCtaHovered(true)}
           onMouseLeave={() => setCtaHovered(false)}
@@ -71,8 +89,7 @@ export default function Contact() {
         </a>
       </div>
 
-      {/* Bottom row — copyright + social links */}
-      <div className="contact-bottom">
+      <div ref={bottomRef} className="contact-bottom">
         <span className="contact-copy">
           © 2026 Aparna Chandrashekar
         </span>
@@ -123,7 +140,6 @@ export default function Contact() {
           font-weight: 400;
           color: #7A7670;
           text-decoration: none;
-          /* 44px touch target */
           display: inline-flex;
           align-items: center;
           min-height: 44px;

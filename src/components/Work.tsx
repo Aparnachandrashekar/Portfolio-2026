@@ -1,7 +1,8 @@
 "use client";
 
+import { gsap } from "@/lib/gsap";
+import { attachCardParallax, fadeSwap, MOTION, parallaxCards, revealLabel, revealUp } from "@/lib/motion";
 import { useEffect, useMemo, useRef, useState } from "react";
-import Script from "next/script";
 import WorkCard from "@/components/WorkCard";
 import {
   WORK_ITEMS, WORK_FILTER_ORDER, CATEGORY_LABEL,
@@ -11,8 +12,11 @@ import {
 export default function Work() {
   const [activeFilter, setActiveFilter] = useState<WorkFilter>('All');
   const [grabbing, setGrabbing]         = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const scrollRef  = useRef<HTMLDivElement>(null);
   const labelRef   = useRef<HTMLSpanElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const filtersRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const startX     = useRef(0);
   const scrollLeft = useRef(0);
@@ -23,16 +27,29 @@ export default function Work() {
   );
 
   useEffect(() => {
-    if (scrollRef.current) scrollRef.current.scrollLeft = 0;
-  }, [activeFilter]);
+    const ctx = gsap.context(() => {
+      revealLabel(labelRef.current, sectionRef.current);
+      revealUp(headingRef.current, { trigger: sectionRef.current, delay: 0.05 });
+      revealUp(filtersRef.current, { trigger: sectionRef.current, delay: 0.1 });
+      const cards = scrollRef.current?.querySelectorAll(".proj-card") ?? [];
+      gsap.set(cards, { opacity: 0, y: MOTION.y });
+      revealUp(cards, {
+        trigger: sectionRef.current,
+        stagger: 0.04,
+        delay: 0.12,
+      });
+      parallaxCards(scrollRef.current);
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   useEffect(() => {
-    return () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const ST = (window as any).ScrollTrigger;
-      if (ST) ST.getAll().forEach((t: { kill: () => void }) => t.kill());
-    };
-  }, []);
+    if (scrollRef.current) scrollRef.current.scrollLeft = 0;
+    const cards = scrollRef.current?.querySelectorAll(".proj-card") ?? [];
+    fadeSwap(cards);
+    cards.forEach((card) => attachCardParallax(card));
+  }, [activeFilter]);
 
   const onMouseDown = (e: React.MouseEvent) => {
     isDragging.current = true;
@@ -51,27 +68,9 @@ export default function Work() {
 
   const stopDrag = () => { isDragging.current = false; setGrabbing(false); };
 
-  const setupAnimation = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const gsap = (window as any).gsap;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const ST   = (window as any).ScrollTrigger;
-    if (!gsap || !ST) return;
-    gsap.registerPlugin(ST);
-    gsap.fromTo(
-      labelRef.current,
-      { clipPath: "inset(0 0 100% 0)" },
-      { clipPath: "inset(0 0 0% 0)", duration: 0.5, ease: "power2.out",
-        scrollTrigger: { trigger: labelRef.current, start: "top 90%" } }
-    );
-  };
-
   return (
     <>
-      <Script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" strategy="afterInteractive" />
-      <Script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" strategy="afterInteractive" onReady={setupAnimation} />
-
-      <section id="work" style={{ paddingTop: "120px", paddingBottom: "120px" }}>
+      <section ref={sectionRef} id="work" style={{ paddingTop: "120px", paddingBottom: "120px" }}>
 
         <div style={{ paddingLeft: "clamp(24px, 5vw, 80px)", paddingRight: "clamp(24px, 5vw, 80px)", marginBottom: "48px" }}>
           <span ref={labelRef} style={{
@@ -82,7 +81,7 @@ export default function Work() {
             Work
           </span>
 
-          <h2 style={{
+          <h2 ref={headingRef} style={{
             fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(36px, 5vw, 64px)",
             fontWeight: 600, color: "var(--text)", lineHeight: 1.08,
             letterSpacing: "-0.02em", margin: "0 0 36px",
@@ -90,7 +89,7 @@ export default function Work() {
             Featured Projects
           </h2>
 
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          <div ref={filtersRef} style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             {WORK_FILTER_ORDER.map((f) => (
               <button
                 key={f}
@@ -135,7 +134,7 @@ export default function Work() {
           transition: transform 300ms cubic-bezier(0.25,0.46,0.45,0.94),
                       box-shadow 300ms cubic-bezier(0.25,0.46,0.45,0.94);
         }
-        .proj-card:hover { transform: translateY(-6px); box-shadow: 0 20px 56px rgba(0,0,0,0.22); }
+        .proj-card:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.16); }
       `}</style>
     </>
   );

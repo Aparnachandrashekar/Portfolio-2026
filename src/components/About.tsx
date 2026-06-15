@@ -1,7 +1,8 @@
 "use client";
 
-import Script from "next/script";
-import { useRef } from "react";
+import { gsap } from "@/lib/gsap";
+import { MOTION, revealLabel, revealUp } from "@/lib/motion";
+import { forwardRef, useEffect, useRef } from "react";
 
 const VALUE_CARDS = [
   {
@@ -19,65 +20,30 @@ const VALUE_CARDS = [
 ];
 
 export default function About() {
-  const leftRef = useRef<HTMLDivElement>(null);
-  const rightRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const paragraphRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const setupAnimation = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const gsap = (window as any).gsap;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const ST = (window as any).ScrollTrigger;
-    if (!gsap || !ST) return;
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      revealLabel(labelRef.current, sectionRef.current);
+      revealUp(headingRef.current, { trigger: sectionRef.current, delay: 0.05 });
+      revealUp(paragraphRefs.current.filter(Boolean), {
+        trigger: sectionRef.current,
+        stagger: MOTION.stagger,
+        delay: 0.1,
+      });
+      revealUp(cardRefs.current.filter(Boolean), {
+        trigger: sectionRef.current,
+        stagger: MOTION.stagger,
+        delay: 0.15,
+      });
+    }, sectionRef);
 
-    gsap.registerPlugin(ST);
-
-    gsap.set(leftRef.current, { opacity: 0, x: -48 });
-    gsap.set(rightRef.current, { opacity: 0, x: 48 });
-    gsap.set(labelRef.current, { clipPath: "inset(0 0 100% 0)" });
-
-    gsap.fromTo(
-      labelRef.current,
-      { clipPath: "inset(0 0 100% 0)" },
-      {
-        clipPath: "inset(0 0 0% 0)",
-        duration: 0.5,
-        ease: "power2.out",
-        scrollTrigger: { trigger: labelRef.current, start: "top 90%" },
-      }
-    );
-
-    const sharedTrigger = {
-      trigger: leftRef.current,
-      start: "top 78%",
-    };
-
-    gsap.fromTo(
-      leftRef.current,
-      { opacity: 0, x: -48 },
-      {
-        opacity: 1,
-        x: 0,
-        duration: 0.85,
-        ease: "power3.out",
-        clearProps: "transform",
-        scrollTrigger: sharedTrigger,
-      }
-    );
-
-    gsap.fromTo(
-      rightRef.current,
-      { opacity: 0, x: 48 },
-      {
-        opacity: 1,
-        x: 0,
-        duration: 0.85,
-        ease: "power3.out",
-        clearProps: "transform",
-        scrollTrigger: sharedTrigger,
-      }
-    );
-  };
+    return () => ctx.revert();
+  }, []);
 
   const bodyStyle: React.CSSProperties = {
     fontFamily: "'Satoshi', sans-serif",
@@ -91,17 +57,8 @@ export default function About() {
 
   return (
     <>
-      <Script
-        src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
-        strategy="afterInteractive"
-      />
-      <Script
-        src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
-        strategy="afterInteractive"
-        onReady={setupAnimation}
-      />
-
       <section
+        ref={sectionRef}
         id="about"
         style={{
           paddingTop: "120px",
@@ -112,7 +69,7 @@ export default function About() {
       >
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div className="about-grid">
-            <div ref={leftRef} className="about-left">
+            <div className="about-left">
               <span
                 ref={labelRef}
                 style={{
@@ -130,6 +87,7 @@ export default function About() {
               </span>
 
               <h2
+                ref={headingRef}
                 style={{
                   fontFamily: "'Clash Display', sans-serif",
                   fontSize: "clamp(36px, 5vw, 64px)",
@@ -144,13 +102,13 @@ export default function About() {
               </h2>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                <p style={bodyStyle}>
+                <p ref={(el) => { paragraphRefs.current[0] = el; }} style={bodyStyle}>
                   At the root of every successful product is a person - how they think, what
                   they want, why they do what they do. Scale that up and you have groups,
                   societies and economies, which is why I believe understanding people is the
                   starting point of building impactful products.
                 </p>
-                <p style={bodyStyle}>
+                <p ref={(el) => { paragraphRefs.current[1] = el; }} style={bodyStyle}>
                   My background in psychology and organizational development helps me approach
                   product management with empathy, systems thinking, and a deep focus on human
                   behavior: specifically how and why people interact with the systems they
@@ -158,7 +116,7 @@ export default function About() {
                   of experience building and shipping tools that put this thinking into practice,
                   from 0 → 1.
                 </p>
-                <p style={bodyStyle}>
+                <p ref={(el) => { paragraphRefs.current[2] = el; }} style={bodyStyle}>
                   One of the key builds here is Thoughtful, a natural language reminder tool
                   that integrates with Google Calendar, WhatsApp, and Google Meet, meeting
                   users where they are. Alongside that, I analyse consumer products through
@@ -168,10 +126,15 @@ export default function About() {
               </div>
             </div>
 
-            <div ref={rightRef} className="about-right">
+            <div className="about-right">
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                {VALUE_CARDS.map(({ label, description }) => (
-                  <ValueCard key={label} label={label} description={description} />
+                {VALUE_CARDS.map(({ label, description }, i) => (
+                  <ValueCard
+                    key={label}
+                    ref={(el) => { cardRefs.current[i] = el; }}
+                    label={label}
+                    description={description}
+                  />
                 ))}
               </div>
             </div>
@@ -204,15 +167,13 @@ export default function About() {
   );
 }
 
-function ValueCard({
-  label,
-  description,
-}: {
-  label: string;
-  description: string;
-}) {
+const ValueCard = forwardRef<
+  HTMLDivElement,
+  { label: string; description: string }
+>(function ValueCard({ label, description }, ref) {
   return (
     <div
+      ref={ref}
       style={{
         borderLeft: "2px solid var(--accent)",
         padding: "16px 20px",
@@ -247,4 +208,4 @@ function ValueCard({
       </span>
     </div>
   );
-}
+});

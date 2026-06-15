@@ -1,182 +1,283 @@
 "use client";
 
-import Script from "next/script";
-import { useRef } from "react";
+import { gsap } from "@/lib/gsap";
+import { MOTION, prefersReducedMotion } from "@/lib/motion";
+import { useEffect, useRef } from "react";
 
-const NAME_WORDS = ["Aparna", "Chandrashekar"];
+const LINE_ONE = "Aparna";
+const LINE_TWO = "Chandrashekar";
 
 export default function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
   const charRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const dotTopRef = useRef<HTMLSpanElement>(null);
+  const dotEndRef = useRef<HTMLSpanElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
   const chevronRef = useRef<SVGSVGElement>(null);
   const scrollLabelRef = useRef<HTMLSpanElement>(null);
 
-  const runAnimation = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const gsap = (window as any).gsap;
-    if (!gsap) return;
-
+  useEffect(() => {
     const start = () => {
-      const chars = charRefs.current.filter(Boolean) as HTMLSpanElement[];
-      const charDuration = 0.5;
-      const charStagger = 0.03;
+      const ctx = gsap.context(() => {
+        const chars = charRefs.current.filter(Boolean) as HTMLSpanElement[];
+        const dots = [dotTopRef.current, dotEndRef.current].filter(Boolean);
 
-      gsap.set(chars, { opacity: 0, y: 60 });
-      gsap.set(taglineRef.current, { clipPath: "inset(0 100% 0 0)" });
-      gsap.set([scrollLabelRef.current, chevronRef.current], { opacity: 0 });
+        if (prefersReducedMotion()) {
+          gsap.set(chars, { opacity: 1, y: 0, clearProps: "all" });
+          gsap.set(dots, { opacity: 1, scale: 1, clearProps: "all" });
+          gsap.set(taglineRef.current, { opacity: 1, y: 0, clearProps: "all" });
+          gsap.set([scrollLabelRef.current, chevronRef.current], { opacity: 1 });
+          return;
+        }
 
-      gsap
-        .timeline()
-        .fromTo(
-          chars,
-          { opacity: 0, y: 60 },
-          {
+        gsap.set(chars, { opacity: 0, y: MOTION.y });
+        gsap.set(dots, { opacity: 0, scale: 0.6, y: 6 });
+        gsap.set(taglineRef.current, { opacity: 0, y: MOTION.y });
+        gsap.set([scrollLabelRef.current, chevronRef.current], { opacity: 0 });
+
+        const lineOneChars = chars.slice(0, LINE_ONE.length);
+        const lineTwoChars = chars.slice(LINE_ONE.length);
+
+        gsap
+          .timeline()
+          .to(lineOneChars, {
             opacity: 1,
             y: 0,
-            duration: charDuration,
-            stagger: charStagger,
-            ease: "power3.out",
+            duration: 0.7,
+            stagger: 0.028,
+            ease: MOTION.ease,
             clearProps: "transform",
-          }
-        )
-        .fromTo(
-          taglineRef.current,
-          { clipPath: "inset(0 100% 0 0)" },
-          { clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power3.out" },
-          "+=0.2"
-        )
-        .fromTo(
-          [scrollLabelRef.current, chevronRef.current],
-          { opacity: 0 },
-          { opacity: 1, duration: 0.5, ease: "power2.out" },
-          "+=0.1"
-        )
-        .to(chevronRef.current, {
-          y: 5,
-          duration: 0.9,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-        });
+          })
+          .to(
+            dotTopRef.current,
+            { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: MOTION.ease, clearProps: "transform" },
+            "-=0.35",
+          )
+          .to(
+            lineTwoChars,
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.7,
+              stagger: 0.022,
+              ease: MOTION.ease,
+              clearProps: "transform",
+            },
+            "-=0.5",
+          )
+          .to(
+            dotEndRef.current,
+            { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: MOTION.ease, clearProps: "transform" },
+            "-=0.25",
+          )
+          .to(
+            taglineRef.current,
+            { opacity: 1, y: 0, duration: 0.65, ease: MOTION.ease, clearProps: "transform" },
+            "-=0.3",
+          )
+          .to(
+            [scrollLabelRef.current, chevronRef.current],
+            { opacity: 1, duration: 0.5, ease: MOTION.ease },
+            "-=0.2",
+          );
+      }, sectionRef);
+
+      return () => ctx.revert();
     };
+
+    let cleanup: (() => void) | undefined;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((window as any).introComplete) {
-      start();
+      cleanup = start();
     } else {
-      window.addEventListener("intro-complete", start, { once: true });
+      const onIntro = () => { cleanup = start(); };
+      window.addEventListener("intro-complete", onIntro, { once: true });
+      return () => {
+        window.removeEventListener("intro-complete", onIntro);
+        cleanup?.();
+      };
     }
-  };
+
+    return () => cleanup?.();
+  }, []);
+
+  const renderLine = (word: string, offset: number) =>
+    word.split("").map((char, ci) => (
+      <span
+        key={`${offset}-${ci}`}
+        ref={(el) => { charRefs.current[offset + ci] = el; }}
+        className="hero-char"
+      >
+        {char}
+      </span>
+    ));
 
   return (
-    <>
-      <Script
-        src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
-        strategy="afterInteractive"
-        onReady={runAnimation}
-      />
+    <section ref={sectionRef} className="hero-section">
+      <div className="hero-body">
+        <div className="hero-copy">
+          <h1 className="hero-title" aria-label={`${LINE_ONE} ${LINE_TWO}`}>
+            <span className="hero-line hero-line--one">
+              <span className="hero-word">
+                <span ref={dotTopRef} className="hero-dot hero-dot--accent" aria-hidden />
+                {renderLine(LINE_ONE, 0)}
+              </span>
+            </span>
 
-      <section style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            padding: "0 clamp(24px, 5vw, 80px)",
-          }}
-        >
-          <div style={{ maxWidth: "900px", width: "100%" }}>
-            <h1
-              style={{
-                fontFamily: "'Clash Display', sans-serif",
-                fontSize: "clamp(52px, 8vw, 100px)",
-                fontWeight: 600,
-                color: "var(--text)",
-                lineHeight: 1.05,
-                letterSpacing: "-0.025em",
-                margin: 0,
-              }}
-            >
-              {NAME_WORDS.map((word, wi) => {
-                const offset = NAME_WORDS
-                  .slice(0, wi)
-                  .reduce((n, w) => n + w.length, 0);
-                return (
-                  <div key={wi} style={{ display: "block" }}>
-                    {word.split("").map((char, ci) => (
-                      <span
-                        key={ci}
-                        ref={(el) => { charRefs.current[offset + ci] = el; }}
-                        style={{ display: "inline-block" }}
-                      >
-                        {char}
-                      </span>
-                    ))}
-                  </div>
-                );
-              })}
-            </h1>
+            <span className="hero-line hero-line--two">
+              <span className="hero-word">
+                {renderLine(LINE_TWO, LINE_ONE.length)}
+                <span ref={dotEndRef} className="hero-dot hero-dot--period" aria-hidden />
+              </span>
+            </span>
+          </h1>
 
-            <p
-              ref={taglineRef}
-              style={{
-                marginTop: "16px",
-                marginBottom: 0,
-                fontFamily: "'Satoshi', sans-serif",
-                fontSize: "clamp(16px, 2vw, 22px)",
-                fontWeight: 400,
-                color: "var(--text-secondary)",
-                maxWidth: "640px",
-                lineHeight: 1.6,
-              }}
-            >
-              At the intersection of people and product is where my strengths,
-              aspirations, and problems worth solving meet.
-            </p>
-          </div>
+          <p ref={taglineRef} className="hero-tagline">
+            At the intersection of people and product is where my strengths,
+            aspirations, and problems worth solving meet.
+          </p>
         </div>
+      </div>
 
-        <div
-          style={{
-            paddingBottom: "36px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "10px",
-            color: "var(--text-secondary)",
-          }}
+      <div className="hero-scroll">
+        <span ref={scrollLabelRef} className="hero-scroll-label">
+          scroll
+        </span>
+        <svg
+          ref={chevronRef}
+          width="16"
+          height="9"
+          viewBox="0 0 16 9"
+          fill="none"
+          aria-hidden
+          className="hero-chevron"
         >
-          <span
-            ref={scrollLabelRef}
-            style={{
-              fontFamily: "'Satoshi', sans-serif",
-              fontSize: "11px",
-              fontWeight: 500,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-            }}
-          >
-            scroll
-          </span>
-          <svg
-            ref={chevronRef}
-            width="16"
-            height="9"
-            viewBox="0 0 16 9"
-            fill="none"
-            aria-hidden
-            style={{ display: "block" }}
-          >
-            <path
-              d="M1 1L8 8L15 1"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
-      </section>
-    </>
+          <path
+            d="M1 1L8 8L15 1"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+
+      <style suppressHydrationWarning>{`
+        .hero-section {
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .hero-body {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          padding: 0 clamp(20px, 4vw, 72px);
+        }
+
+        .hero-copy {
+          width: 100%;
+        }
+
+        .hero-title {
+          margin: 0;
+          font-family: 'Clash Display', sans-serif;
+          font-size: clamp(64px, 13.5vw, 168px);
+          font-weight: 700;
+          color: var(--text);
+          line-height: 0.9;
+          letter-spacing: -0.045em;
+        }
+
+        .hero-line {
+          display: block;
+        }
+
+        .hero-line--one {
+          text-align: left;
+        }
+
+        .hero-line--two {
+          text-align: right;
+          margin-top: -0.04em;
+        }
+
+        .hero-word {
+          position: relative;
+          display: inline-block;
+        }
+
+        .hero-char {
+          display: inline-block;
+        }
+
+        .hero-dot {
+          display: inline-block;
+          border-radius: 50%;
+          background: var(--accent);
+          flex-shrink: 0;
+        }
+
+        .hero-dot--accent {
+          position: absolute;
+          top: 0.06em;
+          left: 0.62em;
+          width: clamp(10px, 1.1vw, 16px);
+          height: clamp(10px, 1.1vw, 16px);
+        }
+
+        .hero-dot--period {
+          width: clamp(12px, 1.3vw, 20px);
+          height: clamp(12px, 1.3vw, 20px);
+          margin-left: 0.06em;
+          vertical-align: baseline;
+          transform: translateY(0.08em);
+        }
+
+        .hero-tagline {
+          margin: clamp(20px, 3vw, 32px) 0 0;
+          max-width: 520px;
+          font-family: 'Satoshi', sans-serif;
+          font-size: clamp(15px, 1.8vw, 20px);
+          font-weight: 400;
+          color: var(--text-secondary);
+          line-height: 1.65;
+        }
+
+        .hero-scroll {
+          padding-bottom: 36px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          color: var(--text-secondary);
+        }
+
+        .hero-scroll-label {
+          font-family: 'Satoshi', sans-serif;
+          font-size: 11px;
+          font-weight: 500;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+
+        .hero-chevron {
+          display: block;
+        }
+
+        @media (max-width: 640px) {
+          .hero-line--two {
+            text-align: left;
+            margin-top: 0;
+          }
+
+          .hero-tagline {
+            max-width: 100%;
+          }
+        }
+      `}</style>
+    </section>
   );
 }

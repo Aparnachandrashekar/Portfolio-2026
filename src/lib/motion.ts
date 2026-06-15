@@ -5,7 +5,7 @@ export const MOTION = {
   duration: 0.7,
   ease: "power2.out",
   stagger: 0.07,
-  start: "top 88%",
+  start: "top 85%",
   labelDuration: 0.55,
 } as const;
 
@@ -25,7 +25,7 @@ type RevealOptions = {
 
 /** Subtle upward fade — elements pinned onto a stable wall */
 export function revealUp(targets: gsap.TweenTarget, options: RevealOptions = {}) {
-  if (!targets) return;
+  if (!targets || (Array.isArray(targets) && targets.length === 0)) return;
 
   if (prefersReducedMotion()) {
     gsap.set(targets, { opacity: 1, y: 0, clearProps: "all" });
@@ -34,23 +34,30 @@ export function revealUp(targets: gsap.TweenTarget, options: RevealOptions = {})
 
   const y = options.y ?? MOTION.y;
   const trigger = options.trigger;
+  const tweenVars = {
+    opacity: 1,
+    y: 0,
+    duration: options.duration ?? MOTION.duration,
+    ease: MOTION.ease,
+    stagger: options.stagger ?? 0,
+    delay: options.delay ?? 0,
+    clearProps: "transform",
+  };
 
-  gsap.fromTo(
-    targets,
-    { opacity: 0, y },
-    {
-      opacity: 1,
-      y: 0,
-      duration: options.duration ?? MOTION.duration,
-      ease: MOTION.ease,
-      stagger: options.stagger ?? 0,
-      delay: options.delay ?? 0,
-      clearProps: "transform",
-      scrollTrigger: trigger
-        ? { trigger, start: options.start ?? MOTION.start, once: true }
-        : undefined,
-    },
-  );
+  gsap.set(targets, { opacity: 0, y });
+
+  if (trigger) {
+    gsap.to(targets, {
+      ...tweenVars,
+      scrollTrigger: {
+        trigger,
+        start: options.start ?? MOTION.start,
+        once: true,
+      },
+    });
+  } else {
+    gsap.to(targets, tweenVars);
+  }
 }
 
 /** Section label wipe — kept minimal */
@@ -62,20 +69,18 @@ export function revealLabel(target: Element | null, trigger?: Element | null) {
     return;
   }
 
-  gsap.fromTo(
-    target,
-    { clipPath: "inset(0 0 100% 0)" },
-    {
-      clipPath: "inset(0 0 0% 0)",
-      duration: MOTION.labelDuration,
-      ease: MOTION.ease,
-      scrollTrigger: {
-        trigger: trigger ?? target,
-        start: MOTION.start,
-        once: true,
-      },
+  gsap.set(target, { clipPath: "inset(0 0 100% 0)" });
+
+  gsap.to(target, {
+    clipPath: "inset(0 0 0% 0)",
+    duration: MOTION.labelDuration,
+    ease: MOTION.ease,
+    scrollTrigger: {
+      trigger: trigger ?? target,
+      start: MOTION.start,
+      once: true,
     },
-  );
+  });
 }
 
 /** Very slight parallax on card surface layer while scrolling */
@@ -113,25 +118,26 @@ export function fadeSwap(
   targets: gsap.TweenTarget,
   options: { stagger?: number } = {},
 ) {
-  if (!targets) return;
+  if (!targets || (Array.isArray(targets) && targets.length === 0)) return;
 
   if (prefersReducedMotion()) {
     gsap.set(targets, { opacity: 1, y: 0, clearProps: "all" });
     return;
   }
 
-  gsap.fromTo(
-    targets,
-    { opacity: 0, y: 8 },
-    {
-      opacity: 1,
-      y: 0,
-      duration: 0.5,
-      ease: MOTION.ease,
-      stagger: options.stagger ?? 0.04,
-      clearProps: "transform",
-    },
-  );
+  gsap.set(targets, { opacity: 0, y: 8 });
+  gsap.to(targets, {
+    opacity: 1,
+    y: 0,
+    duration: 0.5,
+    ease: MOTION.ease,
+    stagger: options.stagger ?? 0.04,
+    clearProps: "transform",
+  });
+}
+
+export function refreshScrollTriggers() {
+  ScrollTrigger.refresh();
 }
 
 export { gsap, ScrollTrigger };

@@ -1,7 +1,7 @@
 "use client";
 
 import { gsap } from "@/lib/gsap";
-import { MOTION, parallaxCards, revealLabel, revealUp } from "@/lib/motion";
+import { parallaxCards, refreshScrollTriggers, revealLabel, revealUp } from "@/lib/motion";
 import { useEffect, useRef } from "react";
 import WorkCard from "@/components/WorkCard";
 import { CERTIFICATIONS } from "@/lib/projects";
@@ -17,13 +17,13 @@ export default function Certifications() {
       revealLabel(labelRef.current, sectionRef.current);
       revealUp(headingRef.current, { trigger: sectionRef.current, delay: 0.05 });
       const cards = trackRef.current?.querySelectorAll(".proj-card") ?? [];
-      gsap.set(cards, { opacity: 0, y: MOTION.y });
       revealUp(cards, {
         trigger: sectionRef.current,
         stagger: 0.05,
         delay: 0.1,
       });
       parallaxCards(trackRef.current);
+      refreshScrollTriggers();
     }, sectionRef);
 
     return () => ctx.revert();

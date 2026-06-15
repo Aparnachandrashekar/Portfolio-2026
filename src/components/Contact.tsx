@@ -1,7 +1,7 @@
 "use client";
 
 import { gsap } from "@/lib/gsap";
-import { revealUp } from "@/lib/motion";
+import { refreshScrollTriggers, revealUp } from "@/lib/motion";
 import { useEffect, useRef, useState } from "react";
 import { LINKEDIN_URL, RESUME_URL } from "@/lib/projects";
 
@@ -17,6 +17,7 @@ export default function Contact() {
       revealUp(headingRef.current, { trigger: sectionRef.current });
       revealUp(ctaRef.current, { trigger: sectionRef.current, delay: 0.08 });
       revealUp(bottomRef.current, { trigger: sectionRef.current, delay: 0.14 });
+      refreshScrollTriggers();
     }, sectionRef);
 
     return () => ctx.revert();

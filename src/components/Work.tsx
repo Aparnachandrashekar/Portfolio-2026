@@ -1,7 +1,7 @@
 "use client";
 
 import { gsap } from "@/lib/gsap";
-import { attachCardParallax, fadeSwap, MOTION, parallaxCards, revealLabel, revealUp } from "@/lib/motion";
+import { attachCardParallax, fadeSwap, parallaxCards, refreshScrollTriggers, revealLabel, revealUp } from "@/lib/motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import WorkCard from "@/components/WorkCard";
 import {
@@ -32,13 +32,13 @@ export default function Work() {
       revealUp(headingRef.current, { trigger: sectionRef.current, delay: 0.05 });
       revealUp(filtersRef.current, { trigger: sectionRef.current, delay: 0.1 });
       const cards = scrollRef.current?.querySelectorAll(".proj-card") ?? [];
-      gsap.set(cards, { opacity: 0, y: MOTION.y });
       revealUp(cards, {
         trigger: sectionRef.current,
         stagger: 0.04,
         delay: 0.12,
       });
       parallaxCards(scrollRef.current);
+      refreshScrollTriggers();
     }, sectionRef);
 
     return () => ctx.revert();

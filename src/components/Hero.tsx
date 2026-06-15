@@ -2,6 +2,7 @@
 
 import { gsap } from "@/lib/gsap";
 import { MOTION, prefersReducedMotion } from "@/lib/motion";
+import HeroShapes from "@/components/HeroShapes";
 import { useEffect, useRef } from "react";
 
 const LINE_ONE = "Aparna";
@@ -10,7 +11,6 @@ const LINE_TWO = "Chandrashekar";
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const charRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const dotTopRef = useRef<HTMLSpanElement>(null);
   const dotEndRef = useRef<HTMLSpanElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
   const chevronRef = useRef<SVGSVGElement>(null);
@@ -20,18 +20,17 @@ export default function Hero() {
     const start = () => {
       const ctx = gsap.context(() => {
         const chars = charRefs.current.filter(Boolean) as HTMLSpanElement[];
-        const dots = [dotTopRef.current, dotEndRef.current].filter(Boolean);
 
         if (prefersReducedMotion()) {
           gsap.set(chars, { opacity: 1, y: 0, clearProps: "all" });
-          gsap.set(dots, { opacity: 1, scale: 1, clearProps: "all" });
+          gsap.set(dotEndRef.current, { opacity: 1, scale: 1, clearProps: "all" });
           gsap.set(taglineRef.current, { opacity: 1, y: 0, clearProps: "all" });
           gsap.set([scrollLabelRef.current, chevronRef.current], { opacity: 1 });
           return;
         }
 
         gsap.set(chars, { opacity: 0, y: MOTION.y });
-        gsap.set(dots, { opacity: 0, scale: 0.6, y: 6 });
+        gsap.set(dotEndRef.current, { opacity: 0, scale: 0.6, y: 6 });
         gsap.set(taglineRef.current, { opacity: 0, y: MOTION.y });
         gsap.set([scrollLabelRef.current, chevronRef.current], { opacity: 0 });
 
@@ -49,11 +48,6 @@ export default function Hero() {
             clearProps: "transform",
           })
           .to(
-            dotTopRef.current,
-            { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: MOTION.ease, clearProps: "transform" },
-            "-=0.35",
-          )
-          .to(
             lineTwoChars,
             {
               opacity: 1,
@@ -63,12 +57,12 @@ export default function Hero() {
               ease: MOTION.ease,
               clearProps: "transform",
             },
-            "-=0.5",
+            "-=0.45",
           )
           .to(
             dotEndRef.current,
             { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: MOTION.ease, clearProps: "transform" },
-            "-=0.25",
+            "-=0.2",
           )
           .to(
             taglineRef.current,
@@ -87,14 +81,23 @@ export default function Hero() {
 
     let cleanup: (() => void) | undefined;
 
+    const run = () => { cleanup = start(); };
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((window as any).introComplete) {
-      cleanup = start();
+      run();
     } else {
-      const onIntro = () => { cleanup = start(); };
+      const onIntro = () => run();
       window.addEventListener("intro-complete", onIntro, { once: true });
+
+      const fallback = window.setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (!(window as any).introComplete) run();
+      }, 2500);
+
       return () => {
         window.removeEventListener("intro-complete", onIntro);
+        window.clearTimeout(fallback);
         cleanup?.();
       };
     }
@@ -115,12 +118,12 @@ export default function Hero() {
 
   return (
     <section ref={sectionRef} className="hero-section">
+      <HeroShapes />
       <div className="hero-body">
         <div className="hero-copy">
           <h1 className="hero-title" aria-label={`${LINE_ONE} ${LINE_TWO}`}>
             <span className="hero-line hero-line--one">
               <span className="hero-word">
-                <span ref={dotTopRef} className="hero-dot hero-dot--accent" aria-hidden />
                 {renderLine(LINE_ONE, 0)}
               </span>
             </span>
@@ -165,12 +168,16 @@ export default function Hero() {
 
       <style suppressHydrationWarning>{`
         .hero-section {
+          position: relative;
           height: 100vh;
           display: flex;
           flex-direction: column;
+          overflow: hidden;
         }
 
         .hero-body {
+          position: relative;
+          z-index: 1;
           flex: 1;
           display: flex;
           align-items: center;
@@ -220,14 +227,6 @@ export default function Hero() {
           flex-shrink: 0;
         }
 
-        .hero-dot--accent {
-          position: absolute;
-          top: 0.06em;
-          left: 0.62em;
-          width: clamp(10px, 1.1vw, 16px);
-          height: clamp(10px, 1.1vw, 16px);
-        }
-
         .hero-dot--period {
           width: clamp(12px, 1.3vw, 20px);
           height: clamp(12px, 1.3vw, 20px);
@@ -247,6 +246,8 @@ export default function Hero() {
         }
 
         .hero-scroll {
+          position: relative;
+          z-index: 1;
           padding-bottom: 36px;
           display: flex;
           flex-direction: column;

@@ -1,25 +1,15 @@
-"use client";
-
-import { useState } from "react";
 import { CATEGORY_ACCENT, type Project } from "@/lib/projects";
 
 export default function WorkCard({ project }: { project: Project }) {
-  const { title, summary, description, href, category, orientation, issuer, inProgress } = project;
-  const [expanded, setExpanded] = useState(false);
-
+  const { title, description, href, category, orientation, issuer, inProgress } = project;
   const accent = CATEGORY_ACCENT[category];
   const isLandscape = orientation === "landscape";
   const isLink = href.startsWith("http");
-  const isExpandable = Boolean(summary && description);
-  const displayText = isExpandable
-    ? expanded
-      ? description
-      : summary
-    : description;
+  const hasDescription = Boolean(description);
 
   const cardStyle: React.CSSProperties = {
     flex: `0 0 ${isLandscape ? "360px" : "280px"}`,
-    minHeight: displayText ? "340px" : "300px",
+    minHeight: hasDescription ? "340px" : "300px",
     height: "auto",
     borderRadius: "22px",
     background: accent,
@@ -31,7 +21,7 @@ export default function WorkCard({ project }: { project: Project }) {
     padding: "22px",
     textDecoration: "none",
     color: "#fff",
-    cursor: isExpandable ? "default" : isLink ? "pointer" : "default",
+    cursor: isLink ? "pointer" : "default",
     opacity: inProgress ? 0.92 : 1,
   };
 
@@ -81,7 +71,7 @@ export default function WorkCard({ project }: { project: Project }) {
           {title}
         </p>
 
-        {displayText && (
+        {description && (
           <p
             className="proj-card-desc"
             style={{
@@ -91,32 +81,10 @@ export default function WorkCard({ project }: { project: Project }) {
               lineHeight: 1.55,
               opacity: 0.88,
               margin: "0 0 8px",
-              whiteSpace: expanded ? "pre-line" : "normal",
             }}
           >
-            {displayText}
+            {description}
           </p>
-        )}
-
-        {isExpandable && (
-          <button
-            type="button"
-            onClick={() => setExpanded((v) => !v)}
-            style={{
-              fontFamily: "'Satoshi', sans-serif",
-              fontSize: "12px",
-              fontWeight: 500,
-              color: "#fff",
-              background: "rgba(0,0,0,0.22)",
-              border: "1px solid rgba(255,255,255,0.25)",
-              borderRadius: "100px",
-              padding: "5px 12px",
-              marginBottom: "8px",
-              cursor: "pointer",
-            }}
-          >
-            {expanded ? "Show less" : "Read more"}
-          </button>
         )}
 
         {issuer && (
@@ -140,55 +108,40 @@ export default function WorkCard({ project }: { project: Project }) {
               fontSize: "12px",
               fontWeight: 500,
               opacity: 0.75,
+              marginTop: "12px",
+              display: "inline-block",
             }}
           >
             March – June 2026
           </span>
         ) : isLink ? (
-          isExpandable ? (
-            <a
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                fontFamily: "'Satoshi', sans-serif",
-                fontSize: "12px",
-                fontWeight: 500,
-                opacity: 0.75,
-                color: "#fff",
-                textDecoration: "none",
-              }}
-            >
-              View ↗
-            </a>
-          ) : (
-            <span
-              style={{
-                fontFamily: "'Satoshi', sans-serif",
-                fontSize: "12px",
-                fontWeight: 500,
-                opacity: 0.75,
-              }}
-            >
-              View ↗
-            </span>
-          )
+          <span
+            style={{
+              fontFamily: "'Satoshi', sans-serif",
+              fontSize: "13px",
+              fontWeight: 700,
+              marginTop: "12px",
+              display: "inline-block",
+            }}
+          >
+            View ↗
+          </span>
         ) : null}
       </div>
     </>
   );
 
-  if (isExpandable || !isLink) {
+  if (isLink) {
     return (
-      <div className="proj-card" style={cardStyle}>
+      <a href={href} target="_blank" rel="noopener noreferrer" className="proj-card" style={cardStyle}>
         {inner}
-      </div>
+      </a>
     );
   }
 
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="proj-card" style={cardStyle}>
+    <div className="proj-card" style={cardStyle}>
       {inner}
-    </a>
+    </div>
   );
 }

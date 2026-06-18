@@ -73,7 +73,7 @@ export const WORK_ITEMS: Project[] = [
   },
   {
     slug: 'knowyourfood',
-    title: 'KnowYourFood',
+    title: 'KnowYourFood - LLM Recommendation Engine',
     description: 'An AI restaurant recommendation engine that ranks Bangalore spots from the Zomato dataset based on your area, budget, cuisine, and rating filters.',
     href: 'https://next-leap-cursor.vercel.app',
     category: 'Build Project',

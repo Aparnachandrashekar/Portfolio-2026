@@ -134,9 +134,57 @@ export default function Hero() {
           }
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+          .hero-section {
+            height: auto;
+            min-height: 100svh;
+          }
+
+          .hero-body {
+            align-items: flex-start;
+            padding-top: 28px;
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+          }
+
+          .hero-title {
+            font-size: clamp(38px, 10.5vw, 64px);
+            line-height: 0.92;
+            letter-spacing: -0.04em;
+            overflow-wrap: break-word;
+          }
+
           .hero-indent {
-            margin-left: clamp(32px, 8vw, 56px);
+            margin-left: clamp(28px, 8vw, 56px);
+          }
+
+          .hero-tagline {
+            font-size: clamp(15px, 4.1vw, 18px);
+            line-height: 1.55;
+            text-wrap: pretty;
+          }
+
+          .hero-dot {
+            width: 10px;
+            height: 10px;
+          }
+
+          .hero-scroll {
+            padding-bottom: max(28px, env(safe-area-inset-bottom));
+          }
+        }
+
+        @media (max-width: 390px) {
+          .hero-title {
+            font-size: clamp(34px, 9.8vw, 42px);
+          }
+
+          .hero-indent {
+            margin-left: 24px;
+          }
+
+          .hero-tagline {
+            font-size: 14px;
           }
         }
       `}</style>

@@ -6,11 +6,11 @@ export default function WorkCard({ project }: { project: Project }) {
   const isLandscape = orientation === "landscape";
   const isLink = href.startsWith("http");
   const hasDescription = Boolean(description);
+  const cardWidth = isLandscape ? "360px" : "280px";
 
-  const cardStyle: React.CSSProperties = {
-    flex: `0 0 ${isLandscape ? "360px" : "280px"}`,
+  const cardStyle = {
+    "--card-width": cardWidth,
     minHeight: hasDescription ? "340px" : "300px",
-    height: "auto",
     borderRadius: "22px",
     background: accent,
     position: "relative",
@@ -23,7 +23,7 @@ export default function WorkCard({ project }: { project: Project }) {
     color: "#fff",
     cursor: isLink ? "pointer" : "default",
     opacity: inProgress ? 0.92 : 1,
-  };
+  } as React.CSSProperties;
 
   const inner = (
     <>
@@ -58,31 +58,12 @@ export default function WorkCard({ project }: { project: Project }) {
       </span>
 
       <div style={{ position: "relative" }}>
-        <p
-          style={{
-            fontFamily: "'Clash Display', sans-serif",
-            fontSize: isLandscape ? "20px" : "17px",
-            fontWeight: 600,
-            lineHeight: 1.25,
-            letterSpacing: "-0.01em",
-            margin: "0 0 6px",
-          }}
-        >
+        <p className="proj-card-title">
           {title}
         </p>
 
         {description && (
-          <p
-            className="proj-card-desc"
-            style={{
-              fontFamily: "'Satoshi', sans-serif",
-              fontSize: "12px",
-              fontWeight: 400,
-              lineHeight: 1.55,
-              opacity: 0.88,
-              margin: "0 0 8px",
-            }}
-          >
+          <p className="proj-card-desc">
             {description}
           </p>
         )}
@@ -102,32 +83,56 @@ export default function WorkCard({ project }: { project: Project }) {
         )}
 
         {inProgress ? (
-          <span
-            style={{
-              fontFamily: "'Satoshi', sans-serif",
-              fontSize: "12px",
-              fontWeight: 500,
-              opacity: 0.75,
-              marginTop: "12px",
-              display: "inline-block",
-            }}
-          >
+          <span className="proj-card-cta">
             March – June 2026
           </span>
         ) : isLink ? (
-          <span
-            style={{
-              fontFamily: "'Satoshi', sans-serif",
-              fontSize: "13px",
-              fontWeight: 700,
-              marginTop: "12px",
-              display: "inline-block",
-            }}
-          >
+          <span className="proj-card-cta">
             View ↗
           </span>
         ) : null}
       </div>
+
+      <style suppressHydrationWarning>{`
+        .proj-card-title {
+          font-family: 'Clash Display', sans-serif;
+          font-size: ${isLandscape ? "20px" : "17px"};
+          font-weight: 600;
+          line-height: 1.25;
+          letter-spacing: -0.01em;
+          margin: 0 0 6px;
+        }
+
+        .proj-card-desc {
+          font-family: 'Satoshi', sans-serif;
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 1.55;
+          opacity: 0.88;
+          margin: 0 0 8px;
+        }
+
+        .proj-card-cta {
+          font-family: 'Satoshi', sans-serif;
+          font-size: 13px;
+          font-weight: 700;
+          margin-top: 12px;
+          display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+          .proj-card-title {
+            font-size: ${isLandscape ? "18px" : "16px"};
+            overflow-wrap: break-word;
+          }
+
+          .proj-card-desc {
+            font-size: 13px;
+            line-height: 1.5;
+            overflow-wrap: break-word;
+          }
+        }
+      `}</style>
     </>
   );
 

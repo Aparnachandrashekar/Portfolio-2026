@@ -28,12 +28,7 @@ export default function About() {
     <>
       <section
         id="about"
-        style={{
-          paddingTop: "120px",
-          paddingBottom: "120px",
-          paddingLeft: "clamp(24px, 5vw, 80px)",
-          paddingRight: "clamp(24px, 5vw, 80px)",
-        }}
+        className="section-about"
       >
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div className="about-grid">
@@ -104,6 +99,13 @@ export default function About() {
       </section>
 
       <style suppressHydrationWarning>{`
+        .section-about {
+          padding-top: var(--section-pad-y);
+          padding-bottom: var(--section-pad-y);
+          padding-left: var(--page-pad);
+          padding-right: var(--page-pad);
+        }
+
         .about-grid {
           display: flex;
           flex-direction: row;

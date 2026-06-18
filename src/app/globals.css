@@ -9,23 +9,79 @@
   --text-secondary: #7A7670;
   --accent: #D4522A;
   --accent-2: #2B3D6B;
+  --page-pad: clamp(24px, 5vw, 80px);
+  --section-pad-y: 120px;
 }
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background-color: var(--bg);
   color: var(--text);
   font-family: "Satoshi", sans-serif;
-  /* Prevent horizontal overflow on mobile */
   overflow-x: hidden;
 }
 
-/* Remove the per-page smooth scroll declarations */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+/* ─── Work cards ─────────────────────────────────────────────────────────── */
+
+.proj-card {
+  flex: 0 0 var(--card-width, 300px);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-pad-y: 80px;
+    --page-pad: 20px;
+  }
+
+  .proj-card {
+    flex: 0 0 min(var(--card-width, 300px), calc(100vw - 40px)) !important;
+    min-height: auto !important;
+    scroll-snap-align: start;
+  }
+
+  .carousel-track {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    cursor: default !important;
+    scroll-padding-left: 20px;
+    scroll-padding-right: 20px;
+  }
+
+  .work-filters {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+    margin-right: -4px;
+  }
+
+  .work-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .work-filters button {
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --section-pad-y: 64px;
+  }
+
+  .proj-card {
+    flex: 0 0 calc(100vw - 40px) !important;
+    max-width: 340px;
   }
 }

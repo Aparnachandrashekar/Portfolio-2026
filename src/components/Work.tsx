@@ -43,9 +43,9 @@ export default function Work() {
 
   return (
     <>
-      <section id="work" style={{ paddingTop: "120px", paddingBottom: "120px" }}>
+      <section id="work" className="section-work">
 
-        <div style={{ paddingLeft: "clamp(24px, 5vw, 80px)", paddingRight: "clamp(24px, 5vw, 80px)", marginBottom: "48px" }}>
+        <div className="section-head">
           <span style={{
             display: "block", fontFamily: "'Satoshi', sans-serif", fontSize: "11px",
             fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.12em",
@@ -62,7 +62,7 @@ export default function Work() {
             Featured Projects
           </h2>
 
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          <div className="work-filters">
             {WORK_FILTER_ORDER.map((f) => (
               <button
                 key={f}
@@ -84,30 +84,57 @@ export default function Work() {
 
         <div
           ref={scrollRef}
-          className="carousel-track"
           onMouseDown={onMouseDown}
           onMouseMove={onMouseMove}
           onMouseUp={stopDrag}
           onMouseLeave={stopDrag}
           style={{
             display: "flex", gap: "16px", overflowX: "auto",
-            paddingLeft: "clamp(24px, 5vw, 80px)", paddingRight: "clamp(24px, 5vw, 80px)",
-            paddingBottom: "12px", cursor: grabbing ? "grabbing" : "grab",
+            paddingLeft: "var(--page-pad)", paddingRight: "var(--page-pad)",
+            paddingBottom: "12px",
             userSelect: "none", WebkitOverflowScrolling: "touch",
           }}
+          className={`carousel-track${grabbing ? " is-grabbing" : ""}`}
         >
           {filtered.map((p) => <WorkCard key={p.slug} project={p} />)}
         </div>
       </section>
 
       <style suppressHydrationWarning>{`
+        .section-work {
+          padding-top: var(--section-pad-y);
+          padding-bottom: var(--section-pad-y);
+        }
+
+        .section-head {
+          padding-left: var(--page-pad);
+          padding-right: var(--page-pad);
+          margin-bottom: 48px;
+        }
+
+        .work-filters {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
         .carousel-track { scrollbar-width: none; -ms-overflow-style: none; }
         .carousel-track::-webkit-scrollbar { display: none; }
+
+        .carousel-track { cursor: grab; }
+        .carousel-track.is-grabbing { cursor: grabbing; }
+
         .proj-card {
           transition: transform 300ms cubic-bezier(0.25,0.46,0.45,0.94),
                       box-shadow 300ms cubic-bezier(0.25,0.46,0.45,0.94);
         }
         .proj-card:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.16); }
+
+        @media (max-width: 768px) {
+          .section-head { margin-bottom: 32px; }
+
+          .section-head h2 { margin-bottom: 24px !important; }
+        }
       `}</style>
     </>
   );

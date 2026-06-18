@@ -9,13 +9,7 @@ export default function Contact() {
   return (
     <footer
       id="contact"
-      style={{
-        background: "var(--text)",
-        paddingTop: "120px",
-        paddingBottom: "64px",
-        paddingLeft: "clamp(24px, 5vw, 80px)",
-        paddingRight: "clamp(24px, 5vw, 80px)",
-      }}
+      className="section-contact"
     >
       <div
         style={{
@@ -99,6 +93,14 @@ export default function Contact() {
       </div>
 
       <style suppressHydrationWarning>{`
+        .section-contact {
+          background: var(--text);
+          padding-top: var(--section-pad-y);
+          padding-bottom: 64px;
+          padding-left: var(--page-pad);
+          padding-right: var(--page-pad);
+        }
+
         .contact-bottom {
           max-width: 800px;
           margin: 80px auto 0;
@@ -129,11 +131,24 @@ export default function Contact() {
         }
         .contact-social:hover { color: var(--bg); }
 
+        @media (max-width: 768px) {
+          .section-contact {
+            padding-bottom: max(48px, env(safe-area-inset-bottom));
+          }
+
+          .section-contact h2 {
+            font-size: clamp(30px, 8vw, 48px) !important;
+          }
+
+          .contact-bottom {
+            margin-top: 56px;
+          }
+        }
+
         @media (max-width: 560px) {
           .contact-bottom {
             flex-direction: column;
             text-align: center;
-            margin-top: 56px;
           }
         }
       `}</style>

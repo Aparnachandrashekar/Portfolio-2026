@@ -1,7 +1,5 @@
 "use client";
 
-import { gsap } from "@/lib/gsap";
-import { attachCardParallax, fadeSwap, parallaxCards, refreshScrollTriggers, revealLabel, revealUp } from "@/lib/motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import WorkCard from "@/components/WorkCard";
 import {
@@ -12,11 +10,7 @@ import {
 export default function Work() {
   const [activeFilter, setActiveFilter] = useState<WorkFilter>('All');
   const [grabbing, setGrabbing]         = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
   const scrollRef  = useRef<HTMLDivElement>(null);
-  const labelRef   = useRef<HTMLSpanElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const filtersRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const startX     = useRef(0);
   const scrollLeft = useRef(0);
@@ -27,28 +21,7 @@ export default function Work() {
   );
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      revealLabel(labelRef.current, sectionRef.current);
-      revealUp(headingRef.current, { trigger: sectionRef.current, delay: 0.05 });
-      revealUp(filtersRef.current, { trigger: sectionRef.current, delay: 0.1 });
-      const cards = scrollRef.current?.querySelectorAll(".proj-card") ?? [];
-      revealUp(cards, {
-        trigger: sectionRef.current,
-        stagger: 0.04,
-        delay: 0.12,
-      });
-      parallaxCards(scrollRef.current);
-      refreshScrollTriggers();
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollLeft = 0;
-    const cards = scrollRef.current?.querySelectorAll(".proj-card") ?? [];
-    fadeSwap(cards);
-    cards.forEach((card) => attachCardParallax(card));
   }, [activeFilter]);
 
   const onMouseDown = (e: React.MouseEvent) => {
@@ -70,10 +43,10 @@ export default function Work() {
 
   return (
     <>
-      <section ref={sectionRef} id="work" style={{ paddingTop: "120px", paddingBottom: "120px" }}>
+      <section id="work" style={{ paddingTop: "120px", paddingBottom: "120px" }}>
 
         <div style={{ paddingLeft: "clamp(24px, 5vw, 80px)", paddingRight: "clamp(24px, 5vw, 80px)", marginBottom: "48px" }}>
-          <span ref={labelRef} style={{
+          <span style={{
             display: "block", fontFamily: "'Satoshi', sans-serif", fontSize: "11px",
             fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.12em",
             color: "var(--accent)", marginBottom: "16px",
@@ -81,7 +54,7 @@ export default function Work() {
             Work
           </span>
 
-          <h2 ref={headingRef} style={{
+          <h2 style={{
             fontFamily: "'Clash Display', sans-serif", fontSize: "clamp(36px, 5vw, 64px)",
             fontWeight: 600, color: "var(--text)", lineHeight: 1.08,
             letterSpacing: "-0.02em", margin: "0 0 36px",
@@ -89,7 +62,7 @@ export default function Work() {
             Featured Projects
           </h2>
 
-          <div ref={filtersRef} style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             {WORK_FILTER_ORDER.map((f) => (
               <button
                 key={f}

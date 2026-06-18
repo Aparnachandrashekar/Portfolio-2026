@@ -1,9 +1,3 @@
-"use client";
-
-import { gsap } from "@/lib/gsap";
-import { MOTION, revealLabel, revealUp } from "@/lib/motion";
-import { forwardRef, useEffect, useRef } from "react";
-
 const VALUE_CARDS = [
   {
     label: "Structure",
@@ -20,31 +14,6 @@ const VALUE_CARDS = [
 ];
 
 export default function About() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const labelRef = useRef<HTMLSpanElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const paragraphRefs = useRef<(HTMLParagraphElement | null)[]>([]);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      revealLabel(labelRef.current, sectionRef.current);
-      revealUp(headingRef.current, { trigger: sectionRef.current, delay: 0.05 });
-      revealUp(paragraphRefs.current.filter(Boolean), {
-        trigger: sectionRef.current,
-        stagger: MOTION.stagger,
-        delay: 0.1,
-      });
-      revealUp(cardRefs.current.filter(Boolean), {
-        trigger: sectionRef.current,
-        stagger: MOTION.stagger,
-        delay: 0.15,
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   const bodyStyle: React.CSSProperties = {
     fontFamily: "'Satoshi', sans-serif",
     fontSize: "clamp(15px, 2vw, 18px)",
@@ -58,7 +27,6 @@ export default function About() {
   return (
     <>
       <section
-        ref={sectionRef}
         id="about"
         style={{
           paddingTop: "120px",
@@ -71,7 +39,6 @@ export default function About() {
           <div className="about-grid">
             <div className="about-left">
               <span
-                ref={labelRef}
                 style={{
                   display: "block",
                   fontFamily: "'Satoshi', sans-serif",
@@ -87,7 +54,6 @@ export default function About() {
               </span>
 
               <h2
-                ref={headingRef}
                 style={{
                   fontFamily: "'Clash Display', sans-serif",
                   fontSize: "clamp(36px, 5vw, 64px)",
@@ -102,13 +68,13 @@ export default function About() {
               </h2>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                <p ref={(el) => { paragraphRefs.current[0] = el; }} style={bodyStyle}>
+                <p style={bodyStyle}>
                   At the root of every successful product is a person - how they think, what
                   they want, why they do what they do. Scale that up and you have groups,
                   societies and economies, which is why I believe understanding people is the
                   starting point of building impactful products.
                 </p>
-                <p ref={(el) => { paragraphRefs.current[1] = el; }} style={bodyStyle}>
+                <p style={bodyStyle}>
                   My background in psychology and organizational development helps me approach
                   product management with empathy, systems thinking, and a deep focus on human
                   behavior: specifically how and why people interact with the systems they
@@ -116,7 +82,7 @@ export default function About() {
                   of experience building and shipping tools that put this thinking into practice,
                   from 0 → 1.
                 </p>
-                <p ref={(el) => { paragraphRefs.current[2] = el; }} style={bodyStyle}>
+                <p style={bodyStyle}>
                   One of the key builds here is Thoughtful, a natural language reminder tool
                   that integrates with Google Calendar, WhatsApp, and Google Meet, meeting
                   users where they are. Alongside that, I analyse consumer products through
@@ -128,13 +94,8 @@ export default function About() {
 
             <div className="about-right">
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                {VALUE_CARDS.map(({ label, description }, i) => (
-                  <ValueCard
-                    key={label}
-                    ref={(el) => { cardRefs.current[i] = el; }}
-                    label={label}
-                    description={description}
-                  />
+                {VALUE_CARDS.map(({ label, description }) => (
+                  <ValueCard key={label} label={label} description={description} />
                 ))}
               </div>
             </div>
@@ -167,13 +128,9 @@ export default function About() {
   );
 }
 
-const ValueCard = forwardRef<
-  HTMLDivElement,
-  { label: string; description: string }
->(function ValueCard({ label, description }, ref) {
+function ValueCard({ label, description }: { label: string; description: string }) {
   return (
     <div
-      ref={ref}
       style={{
         borderLeft: "2px solid var(--accent)",
         padding: "16px 20px",
@@ -208,4 +165,4 @@ const ValueCard = forwardRef<
       </span>
     </div>
   );
-});
+}

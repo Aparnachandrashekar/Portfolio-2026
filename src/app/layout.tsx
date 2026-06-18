@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
-import PageIntro from "@/components/PageIntro";
-import ScrollRefresh from "@/components/ScrollRefresh";
 import Cursor from "@/components/Cursor";
 import "./globals.css";
 
@@ -28,8 +26,6 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <PageIntro />
-        <ScrollRefresh />
         <Navbar />
         <Cursor />
         <div style={{ paddingTop: "60px" }}>{children}</div>

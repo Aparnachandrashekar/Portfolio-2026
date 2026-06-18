@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { gsap } from "@/lib/gsap";
-import { prefersReducedMotion, revealUp } from "@/lib/motion";
 import { PROJECTS, CATEGORY_ACCENT, CATEGORY_LABEL } from "@/lib/projects";
 
 // ─── section data ─────────────────────────────────────────────────────────────
@@ -63,11 +61,6 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
   const accent = CATEGORY_ACCENT[category];
   const tags = [CATEGORY_LABEL[category]];
 
-  const pageRef = useRef<HTMLDivElement>(null);
-  const heroContentRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const backLinkRef = useRef<HTMLAnchorElement>(null);
-  const tagsRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const [activeSection, setActiveSection] = useState<SectionId>(SECTIONS[0].id);
 
@@ -89,43 +82,8 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
     return () => observers.forEach((obs) => obs?.disconnect());
   }, []);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      revealUp(backLinkRef.current);
-      revealUp(titleRef.current, { delay: 0.05 });
-      revealUp(tagsRef.current?.querySelectorAll("span") ?? [], {
-        delay: 0.1,
-        stagger: 0.05,
-      });
-
-      if (heroContentRef.current && !prefersReducedMotion()) {
-        gsap.fromTo(
-          heroContentRef.current,
-          { y: 0 },
-          {
-            y: -8,
-            ease: "none",
-            scrollTrigger: {
-              trigger: heroContentRef.current,
-              start: "top top",
-              end: "bottom top",
-              scrub: 0.8,
-            },
-          },
-        );
-      }
-
-      sectionRefs.current.forEach((el) => {
-        if (!el) return;
-        revealUp(el, { trigger: el });
-      });
-    }, pageRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <div ref={pageRef}>
+    <div>
       <div
         style={{
           width: "100%",
@@ -138,11 +96,11 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
           padding: `28px clamp(24px, 5vw, 80px) 36px`,
         }}
       >
-        <Link ref={backLinkRef} href="/#work" className="back-link" style={{ opacity: 0 }}>
+        <Link href="/#work" className="back-link">
           ← All work
         </Link>
 
-        <div ref={heroContentRef}>
+        <div>
           <p
             style={{
               fontFamily: "'Satoshi', sans-serif",
@@ -156,7 +114,6 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
           </p>
 
           <h1
-            ref={titleRef}
             style={{
               fontFamily: "'Clash Display', sans-serif",
               fontSize: "clamp(40px, 6vw, 80px)",
@@ -165,13 +122,12 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
               letterSpacing: "-0.025em",
               lineHeight: 1.05,
               margin: "0 0 16px 0",
-              opacity: 0,
             }}
           >
             {title}
           </h1>
 
-          <div ref={tagsRef} style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
             {tags.map((tag) => (
               <span
                 key={tag}
@@ -183,7 +139,6 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
                   background: "var(--bg)",
                   borderRadius: "100px",
                   padding: "4px 10px",
-                  opacity: 0,
                 }}
               >
                 {tag}
@@ -241,7 +196,6 @@ export default function WorkPage({ params }: { params: { slug: string } }) {
             ref={(el) => {
               sectionRefs.current[i] = el;
             }}
-            style={{ opacity: 0 }}
           >
             <span
               style={{

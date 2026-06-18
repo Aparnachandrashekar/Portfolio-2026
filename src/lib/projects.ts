@@ -13,6 +13,9 @@ export type WorkCategory = Exclude<ProjectCategory, 'Certification'>;
 export type Project = {
   slug: string;
   title: string;
+  /** One-line teaser shown on the card by default */
+  summary?: string;
+  /** Full description — shown when the card is expanded */
   description?: string;
   href: string;
   category: ProjectCategory;
@@ -60,6 +63,24 @@ export const WORK_ITEMS: Project[] = [
     title: 'Thoughtful',
     description: 'A natural language reminder tool built on Google Calendar, WhatsApp, and Google Meet APIs, designed to make staying in touch effortless. Peaked at 60 weekly active users | April 2026',
     href: 'https://www.thoughtful.my/',
+    category: 'Build Project',
+    orientation: 'landscape',
+  },
+  {
+    slug: 'mutual-fund-faq',
+    title: 'Mutual Fund FAQ Assistant',
+    summary: 'A facts-only RAG chatbot for objective mutual fund queries — NAV, expense ratio, exit load, SIP minimums, and AUM — sourced exclusively from official Groww pages.',
+    description: 'Built and deployed a facts-only RAG chatbot that answers objective queries about six Indian mutual fund schemes on metrics such as NAV, expense ratio, exit load, minimum SIP and AUM using only official Groww scheme pages as the source corpus.\n\nDesigned with strict compliance guardrails: no investment advice, no hallucinations, no open-web retrieval. The system classifies intent before every query, refuses out-of-scope and advisory questions with structured responses, and cites the exact source URL for every answer it gives.\n\nBuilt the pipeline end-to-end including ingestion, chunking, BM25 retrieval (with a hybrid FAISS fallback), structured fact extraction, optional Groq LLM polish, and a static chat UI. Automated daily corpus refresh via GitHub Actions keeps the index current without manual intervention.\n\nDeployed on: FastAPI backend on Render, static frontend on Vercel.',
+    href: 'https://mutualfund-faq-ra-gbot.vercel.app',
+    category: 'Build Project',
+    orientation: 'landscape',
+  },
+  {
+    slug: 'knowyourfood',
+    title: 'KnowYourFood',
+    summary: 'An AI restaurant recommendation engine that ranks Bangalore spots from the Zomato dataset based on your area, budget, cuisine, and rating filters.',
+    description: 'KnowYourFood, an AI Restaurant Recommendation Engine. Find your next perfect food spot in Bangalore! KnowYourFood pulls from the Zomato dataset via Hugging Face, and uses Groq (Llama 3.1) to intelligently rank the top restaurants based on the filters you set, delivered through a clean and functional interface.\n\nStack: Next.js | Tailwind CSS | Vercel | FastAPI | Render | Groq (Llama 3.1) | Hugging Face Datasets',
+    href: 'https://next-leap-cursor.vercel.app',
     category: 'Build Project',
     orientation: 'landscape',
   },

@@ -90,7 +90,7 @@ export default function About() {
             </div>
 
             <div className="about-right">
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div className="about-value-stack" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 {VALUE_CARDS.map(({ label, description }) => (
                   <ValueCard key={label} label={label} description={description} />
                 ))}
@@ -120,45 +120,56 @@ export default function About() {
         @media (max-width: 768px) {
           .about-grid {
             flex-direction: column;
-            gap: 48px;
+            gap: 40px;
+            align-items: flex-start;
           }
           .about-left,
           .about-right {
             width: 100%;
-            text-align: center;
+            text-align: left;
           }
 
           .about-eyebrow {
-            font-size: 7px !important;
+            font-size: 14px !important;
           }
 
           .about-heading {
-            font-size: clamp(22px, 3vw, 38px) !important;
+            font-size: clamp(47px, 6.5vw, 52px) !important;
           }
 
           .about-body {
-            font-size: clamp(11px, 1.2vw, 11px) !important;
+            font-size: clamp(19px, 2.6vw, 23px) !important;
             max-width: 100% !important;
-            line-height: 1.7 !important;
+            line-height: 1.75 !important;
           }
 
           .about-body-stack {
-            align-items: center;
+            align-items: flex-start;
+          }
+
+          .about-value-stack {
+            align-items: flex-start;
+            width: 100%;
           }
 
           .value-card {
-            border-left: none !important;
-            border-top: 2px solid var(--accent) !important;
-            text-align: center;
-            align-items: center;
+            width: fit-content;
+            max-width: 100%;
+            border-left: 2px solid var(--accent) !important;
+            border-top: none !important;
+            text-align: left;
+            align-items: flex-start;
           }
 
           .value-card-label {
-            font-size: 10px !important;
+            font-size: 22px !important;
+            font-weight: 700 !important;
+            line-height: 1.2 !important;
           }
 
           .value-card-desc {
-            font-size: 9px !important;
+            font-size: 15px !important;
+            line-height: 1.55 !important;
           }
         }
       `}</style>

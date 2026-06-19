@@ -7,8 +7,6 @@ export default function WorkCard({ project }: { project: Project }) {
   const isLink = href.startsWith("http");
   const hasDescription = Boolean(description);
   const cardWidth = isLandscape ? "360px" : "280px";
-  const orientClass = isLandscape ? "proj-card--landscape" : "proj-card--portrait";
-  const descClass = hasDescription ? " proj-card--desc" : "";
 
   const cardStyle = {
     "--card-width": cardWidth,
@@ -123,63 +121,31 @@ export default function WorkCard({ project }: { project: Project }) {
         }
 
         @media (max-width: 768px) {
-          .proj-card--landscape.proj-card--desc {
-            min-height: 204px !important;
-          }
-
-          .proj-card--landscape:not(.proj-card--desc) {
-            min-height: 180px !important;
-          }
-
-          .proj-card--portrait.proj-card--desc {
-            min-height: 180px !important;
-          }
-
-          .proj-card--portrait:not(.proj-card--desc) {
-            min-height: 168px !important;
-          }
-
-          .proj-card-badge {
-            font-size: 8px;
-            padding: 3px 7px;
-          }
-
           .proj-card-title {
-            font-size: ${isLandscape ? "12px" : "11px"};
+            font-size: ${isLandscape ? "18px" : "16px"};
             overflow-wrap: break-word;
           }
 
           .proj-card-desc {
-            font-size: 9px;
-            line-height: 1.45;
+            font-size: 13px;
+            line-height: 1.5;
             overflow-wrap: break-word;
-          }
-
-          .proj-card-issuer {
-            font-size: 9px;
-          }
-
-          .proj-card-cta {
-            font-size: 10px;
-            margin-top: 8px;
           }
         }
       `}</style>
     </>
   );
 
-  const cardClass = `proj-card ${orientClass}${descClass}`;
-
   if (isLink) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={cardClass} style={cardStyle}>
+      <a href={href} target="_blank" rel="noopener noreferrer" className="proj-card" style={cardStyle}>
         {inner}
       </a>
     );
   }
 
   return (
-    <div className={cardClass} style={cardStyle}>
+    <div className="proj-card" style={cardStyle}>
       {inner}
     </div>
   );

@@ -31,8 +31,6 @@ body {
   }
 }
 
-/* ─── Work cards ─────────────────────────────────────────────────────────── */
-
 .proj-card {
   flex: 0 0 var(--card-width, 300px);
 }
@@ -40,39 +38,47 @@ body {
 @media (max-width: 768px) {
   :root {
     --section-pad-y: 80px;
-    --page-pad: 16px;
+    --page-pad: 2px;
   }
 
   .proj-card {
-    flex: 0 0 var(--card-width) !important;
-    padding: 13px !important;
+    flex: 0 0 min(var(--card-width, 300px), calc(100vw - 4px)) !important;
+    min-height: auto !important;
     scroll-snap-align: start;
   }
 
-  .proj-card--landscape {
-    --card-width: 216px;
-  }
-
-  .proj-card--portrait {
-    --card-width: 168px;
-  }
-
   .carousel-track {
-    scroll-snap-type: x proximity;
+    scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     cursor: default !important;
-    scroll-padding-left: 16px;
-    scroll-padding-right: 16px;
+    scroll-padding-left: 2px;
+    scroll-padding-right: 2px;
   }
 
   .work-filters {
-    flex-wrap: wrap !important;
-    overflow-x: visible;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+
+  .work-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .work-filters button {
+    flex-shrink: 0;
   }
 }
 
 @media (max-width: 480px) {
   :root {
     --section-pad-y: 64px;
+  }
+
+  .proj-card {
+    flex: 0 0 calc(100vw - 4px) !important;
+    max-width: 340px;
   }
 }

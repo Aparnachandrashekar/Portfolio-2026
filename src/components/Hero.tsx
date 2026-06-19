@@ -17,28 +17,28 @@ export default function Hero() {
           <p className="hero-tagline hero-indent">
             At the intersection of people and product is where my strengths, aspirations, and problems worth solving meet.
           </p>
-
-          <a href="#about" className="hero-dive-in">
-            <span className="hero-dive-in__label">Dive in</span>
-            <svg
-              className="hero-dive-in__arrow"
-              width="28"
-              height="36"
-              viewBox="0 0 28 36"
-              fill="none"
-              aria-hidden
-            >
-              <path
-                d="M14 2 C14 2 13 18 14 28 M14 28 L8 22 M14 28 L20 22"
-                stroke="currentColor"
-                strokeWidth="1.75"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </a>
         </div>
       </div>
+
+      <a href="#about" className="hero-dive-in">
+        <span className="hero-dive-in__label">Dive in</span>
+        <svg
+          className="hero-dive-in__arrow"
+          width="10"
+          height="12"
+          viewBox="0 0 10 12"
+          fill="none"
+          aria-hidden
+        >
+          <path
+            d="M5 1 L5 10 M5 10 L2 7 M5 10 L8 7"
+            stroke="currentColor"
+            strokeWidth="1.25"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </a>
 
       <div className="hero-scroll">
         <span className="hero-scroll-label">scroll</span>
@@ -161,31 +161,35 @@ export default function Hero() {
         @media (max-width: 768px) {
           .hero-section {
             height: auto;
-            min-height: calc(100svh - 60px - 45px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            min-height: calc(100svh - 60px);
+            justify-content: space-between;
           }
 
           .hero-body {
             flex: 1;
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 24px max(20px, env(safe-area-inset-left)) 16px max(20px, env(safe-area-inset-right));
+            padding: 16px 2px 0;
           }
 
           .hero-copy {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
+            width: 100%;
           }
 
           .hero-title {
-            font-size: clamp(32px, 9vw, 44px);
+            font-size: inherit;
+            line-height: 0.92;
+            letter-spacing: -0.04em;
+          }
+
+          .hero-line {
+            white-space: nowrap;
+            font-size: clamp(38px, 12.4vw, 56px);
             font-weight: 700;
-            line-height: 0.95;
-            letter-spacing: -0.035em;
+          }
+
+          .hero-line--two {
+            font-size: clamp(34px, 11.2vw, 52px);
           }
 
           .hero-indent {
@@ -193,15 +197,15 @@ export default function Hero() {
           }
 
           .hero-tagline {
-            margin-top: 16px;
-            font-size: clamp(14px, 3.8vw, 15px);
+            margin-top: 18px;
+            font-size: clamp(16px, 4.2vw, 19px);
             line-height: 1.55;
             text-wrap: pretty;
           }
 
           .hero-dot {
-            width: 8px;
-            height: 8px;
+            width: clamp(7px, 1.8vw, 9px);
+            height: clamp(7px, 1.8vw, 9px);
           }
 
           .hero-scroll {
@@ -209,13 +213,15 @@ export default function Hero() {
           }
 
           .hero-dive-in {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 8px;
-            margin-top: 28px;
+            display: inline-flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            margin: 0 2px 32px;
+            padding: 0;
             text-decoration: none;
             color: var(--text-secondary);
+            align-self: flex-start;
           }
 
           .hero-dive-in__label {
@@ -227,13 +233,8 @@ export default function Hero() {
           }
 
           .hero-dive-in__arrow {
-            display: block;
-            animation: heroArrowBob 1.8s ease-in-out infinite;
-          }
-
-          @keyframes heroArrowBob {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(6px); }
+            opacity: 0.35;
+            flex-shrink: 0;
           }
         }
       `}</style>

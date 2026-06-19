@@ -24,7 +24,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -49,7 +48,6 @@ export default function Navbar() {
           transition: "background-color 0.3s ease, border-color 0.3s ease",
         }}
       >
-        {/* Logo */}
         <Link
           href="/"
           style={{
@@ -64,7 +62,6 @@ export default function Navbar() {
           AC
         </Link>
 
-        {/* Desktop links */}
         <nav className="nav-right" style={{ display: "flex", gap: "24px", alignItems: "center" }}>
           {NAV_LINKS.map(({ label, href, external }) => (
             <DesktopLink key={label} href={href} external={external}>
@@ -73,7 +70,6 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Hamburger — mobile only */}
         <button
           onClick={() => setMenuOpen((v) => !v)}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -82,7 +78,6 @@ export default function Navbar() {
             background: "none",
             border: "none",
             cursor: "pointer",
-            /* 44×44 touch target */
             minWidth: "44px",
             minHeight: "44px",
             alignItems: "center",
@@ -96,24 +91,13 @@ export default function Navbar() {
         </button>
       </header>
 
-      {/* Mobile overlay — hidden when mobile section nav is active */}
       <div
-        className="mobile-nav-overlay"
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 40,
-          backgroundColor: "var(--bg)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "40px",
-          opacity: menuOpen ? 1 : 0,
-          pointerEvents: menuOpen ? "all" : "none",
-          transition: "opacity 0.25s ease",
-        }}
-      >
+        className={`mobile-nav-backdrop${menuOpen ? " is-open" : ""}`}
+        aria-hidden={!menuOpen}
+        onClick={() => setMenuOpen(false)}
+      />
+
+      <aside className={`mobile-nav-drawer${menuOpen ? " is-open" : ""}`} aria-hidden={!menuOpen}>
         {NAV_LINKS.map(({ label, href, external }) => (
           <a
             key={label}
@@ -121,28 +105,73 @@ export default function Navbar() {
             target={external ? "_blank" : undefined}
             rel={external ? "noopener noreferrer" : undefined}
             onClick={() => setMenuOpen(false)}
-            style={{
-              fontFamily: "'Satoshi', sans-serif",
-              fontSize: "clamp(28px, 8vw, 36px)",
-              fontWeight: 500,
-              color: "var(--text)",
-              textDecoration: "none",
-              letterSpacing: "-0.02em",
-              display: "flex",
-              alignItems: "center",
-              minHeight: "56px",
-            }}
+            className="mobile-nav-drawer__link"
           >
             {label}
           </a>
         ))}
-      </div>
+      </aside>
 
       <style suppressHydrationWarning>{`
+        .mobile-nav-backdrop,
+        .mobile-nav-drawer {
+          display: none;
+        }
+
         @media (max-width: 768px) {
           .nav-right { display: none !important; }
-          .hamburger { display: none !important; }
-          .mobile-nav-overlay { display: none !important; }
+          .hamburger { display: flex !important; }
+
+          .mobile-nav-backdrop {
+            display: block;
+            position: fixed;
+            inset: 0;
+            z-index: 40;
+            background: rgba(26, 26, 26, 0.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+          }
+
+          .mobile-nav-backdrop.is-open {
+            opacity: 1;
+            pointer-events: all;
+          }
+
+          .mobile-nav-drawer {
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 45;
+            width: min(280px, 78vw);
+            height: 100%;
+            padding: 80px 28px 32px;
+            gap: 8px;
+            background: var(--bg);
+            border-left: 1px solid var(--surface);
+            transform: translateX(100%);
+            transition: transform 0.28s ease;
+            box-shadow: -8px 0 32px rgba(0, 0, 0, 0.06);
+          }
+
+          .mobile-nav-drawer.is-open {
+            transform: translateX(0);
+          }
+
+          .mobile-nav-drawer__link {
+            font-family: 'Satoshi', sans-serif;
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            min-height: 48px;
+            padding: 4px 0;
+          }
         }
       `}</style>
     </>
@@ -207,34 +236,15 @@ function HamburgerIcon({ open }: { open: boolean }) {
       style={{ transition: "transform 0.2s ease" }}
     >
       {open ? (
-        /* X icon */
         <>
-          <line
-            x1="3" y1="3" x2="19" y2="19"
-            stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"
-            style={{ transition: "all 0.2s ease" }}
-          />
-          <line
-            x1="19" y1="3" x2="3" y2="19"
-            stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"
-            style={{ transition: "all 0.2s ease" }}
-          />
+          <line x1="3" y1="3" x2="19" y2="19" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+          <line x1="19" y1="3" x2="3" y2="19" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
         </>
       ) : (
-        /* Hamburger */
         <>
-          <line
-            x1="3" y1="6" x2="19" y2="6"
-            stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"
-          />
-          <line
-            x1="3" y1="11" x2="19" y2="11"
-            stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"
-          />
-          <line
-            x1="3" y1="16" x2="19" y2="16"
-            stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"
-          />
+          <line x1="3" y1="6" x2="19" y2="6" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+          <line x1="3" y1="11" x2="19" y2="11" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+          <line x1="3" y1="16" x2="19" y2="16" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
         </>
       )}
     </svg>

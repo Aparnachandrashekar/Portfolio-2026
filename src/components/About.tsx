@@ -120,7 +120,7 @@ export default function About() {
         @media (max-width: 768px) {
           .about-grid {
             flex-direction: column;
-            gap: 40px;
+            gap: 28px;
             align-items: flex-start;
           }
           .about-left,
@@ -130,46 +130,52 @@ export default function About() {
           }
 
           .about-eyebrow {
-            font-size: 14px !important;
+            font-size: 10px !important;
+            margin-bottom: 12px !important;
           }
 
           .about-heading {
-            font-size: clamp(47px, 6.5vw, 52px) !important;
+            font-size: clamp(33px, 4.5vw, 36px) !important;
+            margin-bottom: 20px !important;
           }
 
           .about-body {
-            font-size: clamp(19px, 2.6vw, 23px) !important;
+            font-size: clamp(13px, 1.8vw, 16px) !important;
             max-width: 100% !important;
-            line-height: 1.75 !important;
+            line-height: 1.65 !important;
           }
 
           .about-body-stack {
             align-items: flex-start;
+            gap: 14px !important;
           }
 
           .about-value-stack {
             align-items: flex-start;
             width: 100%;
+            gap: 12px !important;
           }
 
           .value-card {
             width: fit-content;
-            max-width: 100%;
+            max-width: calc(100% - 0px);
+            padding: 11px 14px !important;
             border-left: 2px solid var(--accent) !important;
             border-top: none !important;
             text-align: left;
             align-items: flex-start;
+            gap: 4px !important;
           }
 
           .value-card-label {
-            font-size: 22px !important;
+            font-size: 15px !important;
             font-weight: 700 !important;
             line-height: 1.2 !important;
           }
 
           .value-card-desc {
-            font-size: 15px !important;
-            line-height: 1.55 !important;
+            font-size: 11px !important;
+            line-height: 1.5 !important;
           }
         }
       `}</style>

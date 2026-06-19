@@ -32,6 +32,7 @@ export default function Navbar() {
   return (
     <>
       <header
+        className="site-header"
         style={{
           position: "fixed",
           top: 0,
@@ -121,6 +122,11 @@ export default function Navbar() {
         @media (max-width: 768px) {
           .nav-right { display: none !important; }
           .hamburger { display: flex !important; }
+
+          .site-header {
+            padding-left: max(7px, env(safe-area-inset-left)) !important;
+            padding-right: max(7px, env(safe-area-inset-right)) !important;
+          }
 
           .mobile-nav-backdrop {
             display: block;

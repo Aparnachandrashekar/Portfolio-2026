@@ -169,7 +169,7 @@ export default function Hero() {
             flex: 1;
             display: flex;
             align-items: center;
-            padding: 16px 2px 0;
+            padding: 16px 7px 0;
           }
 
           .hero-copy {
@@ -184,12 +184,12 @@ export default function Hero() {
 
           .hero-line {
             white-space: nowrap;
-            font-size: clamp(38px, 12.4vw, 56px);
+            font-size: clamp(36px, 11.8vw, 52px);
             font-weight: 700;
           }
 
           .hero-line--two {
-            font-size: clamp(34px, 11.2vw, 52px);
+            font-size: clamp(32px, 10.6vw, 48px);
           }
 
           .hero-indent {
@@ -197,9 +197,9 @@ export default function Hero() {
           }
 
           .hero-tagline {
-            margin-top: 18px;
-            font-size: clamp(16px, 4.2vw, 19px);
-            line-height: 1.55;
+            margin-top: 16px;
+            font-size: clamp(15px, 3.9vw, 17px);
+            line-height: 1.5;
             text-wrap: pretty;
           }
 
@@ -217,7 +217,7 @@ export default function Hero() {
             flex-direction: row;
             align-items: center;
             gap: 6px;
-            margin: 0 2px 32px;
+            margin: 0 7px 28px;
             padding: 0;
             text-decoration: none;
             color: var(--text-secondary);

@@ -131,8 +131,7 @@ export default function Work() {
         .proj-card:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.16); }
 
         @media (max-width: 768px) {
-          .section-head { margin-bottom: 32px; }
-          .section-head h2 { margin-bottom: 24px !important; }
+          .section-head { margin-bottom: 24px; }
         }
       `}</style>
     </>

@@ -133,15 +133,15 @@ export default function Contact() {
 
         @media (max-width: 768px) {
           .section-contact {
-            padding-bottom: max(48px, env(safe-area-inset-bottom));
+            padding-bottom: max(40px, env(safe-area-inset-bottom));
           }
 
           .section-contact h2 {
-            font-size: clamp(30px, 8vw, 48px) !important;
+            font-size: clamp(26px, 7vw, 36px) !important;
           }
 
           .contact-bottom {
-            margin-top: 56px;
+            margin-top: 40px;
           }
         }
 

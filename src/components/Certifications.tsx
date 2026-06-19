@@ -1,4 +1,5 @@
 import WorkCard from "@/components/WorkCard";
+import CarouselWithHints from "@/components/CarouselWithHints";
 import { CERTIFICATIONS } from "@/lib/projects";
 
 export default function Certifications() {
@@ -22,16 +23,9 @@ export default function Certifications() {
         </h2>
       </div>
 
-      <div
-        className="carousel-track"
-        style={{
-          display: "flex", gap: "16px", overflowX: "auto",
-          paddingLeft: "var(--page-pad)", paddingRight: "var(--page-pad)",
-          paddingBottom: "12px", WebkitOverflowScrolling: "touch",
-        }}
-      >
+      <CarouselWithHints>
         {CERTIFICATIONS.map((p) => <WorkCard key={p.slug} project={p} />)}
-      </div>
+      </CarouselWithHints>
 
       <style suppressHydrationWarning>{`
         .section-certs {

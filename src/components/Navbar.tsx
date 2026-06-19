@@ -96,8 +96,9 @@ export default function Navbar() {
         </button>
       </header>
 
-      {/* Mobile overlay */}
+      {/* Mobile overlay — hidden when mobile section nav is active */}
       <div
+        className="mobile-nav-overlay"
         style={{
           position: "fixed",
           inset: 0,
@@ -138,9 +139,10 @@ export default function Navbar() {
       </div>
 
       <style suppressHydrationWarning>{`
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
           .nav-right { display: none !important; }
-          .hamburger { display: flex !important; }
+          .hamburger { display: none !important; }
+          .mobile-nav-overlay { display: none !important; }
         }
       `}</style>
     </>

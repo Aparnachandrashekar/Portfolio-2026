@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import WorkCard from "@/components/WorkCard";
+import CarouselWithHints from "@/components/CarouselWithHints";
 import {
   WORK_ITEMS, WORK_FILTER_ORDER, CATEGORY_LABEL,
   type WorkFilter,
@@ -82,22 +83,16 @@ export default function Work() {
           </div>
         </div>
 
-        <div
-          ref={scrollRef}
+        <CarouselWithHints
+          trackRef={scrollRef}
+          grabbing={grabbing}
           onMouseDown={onMouseDown}
           onMouseMove={onMouseMove}
           onMouseUp={stopDrag}
           onMouseLeave={stopDrag}
-          style={{
-            display: "flex", gap: "16px", overflowX: "auto",
-            paddingLeft: "var(--page-pad)", paddingRight: "var(--page-pad)",
-            paddingBottom: "12px",
-            userSelect: "none", WebkitOverflowScrolling: "touch",
-          }}
-          className={`carousel-track${grabbing ? " is-grabbing" : ""}`}
         >
           {filtered.map((p) => <WorkCard key={p.slug} project={p} />)}
-        </div>
+        </CarouselWithHints>
       </section>
 
       <style suppressHydrationWarning>{`

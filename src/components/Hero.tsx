@@ -3,7 +3,7 @@ const LINE_TWO = "Chandrashekar";
 
 export default function Hero() {
   return (
-    <section className="hero-section">
+    <section id="home" className="hero-section">
       <div className="hero-body">
         <div className="hero-copy">
           <h1 className="hero-title" aria-label={`${LINE_ONE} ${LINE_TWO}`}>
@@ -17,6 +17,26 @@ export default function Hero() {
           <p className="hero-tagline hero-indent">
             At the intersection of people and product is where my strengths, aspirations, and problems worth solving meet.
           </p>
+
+          <a href="#about" className="hero-dive-in">
+            <span className="hero-dive-in__label">Dive in</span>
+            <svg
+              className="hero-dive-in__arrow"
+              width="28"
+              height="36"
+              viewBox="0 0 28 36"
+              fill="none"
+              aria-hidden
+            >
+              <path
+                d="M14 2 C14 2 13 18 14 28 M14 28 L8 22 M14 28 L20 22"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </a>
         </div>
       </div>
 
@@ -107,6 +127,10 @@ export default function Hero() {
           white-space: nowrap;
         }
 
+        .hero-dive-in {
+          display: none;
+        }
+
         .hero-scroll {
           padding-bottom: 36px;
           display: flex;
@@ -137,54 +161,79 @@ export default function Hero() {
         @media (max-width: 768px) {
           .hero-section {
             height: auto;
-            min-height: 100svh;
+            min-height: calc(100svh - 60px - 45px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
           }
 
           .hero-body {
-            align-items: flex-start;
-            padding-top: 28px;
-            padding-left: max(20px, env(safe-area-inset-left));
-            padding-right: max(20px, env(safe-area-inset-right));
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px max(20px, env(safe-area-inset-left)) 16px max(20px, env(safe-area-inset-right));
+          }
+
+          .hero-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
           }
 
           .hero-title {
-            font-size: clamp(38px, 10.5vw, 64px);
-            line-height: 0.92;
-            letter-spacing: -0.04em;
-            overflow-wrap: break-word;
+            font-size: clamp(32px, 9vw, 44px);
+            font-weight: 700;
+            line-height: 0.95;
+            letter-spacing: -0.035em;
           }
 
           .hero-indent {
-            margin-left: clamp(28px, 8vw, 56px);
+            margin-left: 0;
           }
 
           .hero-tagline {
-            font-size: clamp(15px, 4.1vw, 18px);
+            margin-top: 16px;
+            font-size: clamp(14px, 3.8vw, 15px);
             line-height: 1.55;
             text-wrap: pretty;
           }
 
           .hero-dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
           }
 
           .hero-scroll {
-            padding-bottom: max(28px, env(safe-area-inset-bottom));
-          }
-        }
-
-        @media (max-width: 390px) {
-          .hero-title {
-            font-size: clamp(34px, 9.8vw, 42px);
+            display: none;
           }
 
-          .hero-indent {
-            margin-left: 24px;
+          .hero-dive-in {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+            margin-top: 28px;
+            text-decoration: none;
+            color: var(--text-secondary);
           }
 
-          .hero-tagline {
-            font-size: 14px;
+          .hero-dive-in__label {
+            font-family: 'Satoshi', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+          }
+
+          .hero-dive-in__arrow {
+            display: block;
+            animation: heroArrowBob 1.8s ease-in-out infinite;
+          }
+
+          @keyframes heroArrowBob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
           }
         }
       `}</style>

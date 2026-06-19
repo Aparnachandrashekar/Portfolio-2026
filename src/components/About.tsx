@@ -34,6 +34,7 @@ export default function About() {
           <div className="about-grid">
             <div className="about-left">
               <span
+                className="about-eyebrow"
                 style={{
                   display: "block",
                   fontFamily: "'Satoshi', sans-serif",
@@ -49,6 +50,7 @@ export default function About() {
               </span>
 
               <h2
+                className="about-heading"
                 style={{
                   fontFamily: "'Clash Display', sans-serif",
                   fontSize: "clamp(36px, 5vw, 64px)",
@@ -62,14 +64,14 @@ export default function About() {
                 People first.
               </h2>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                <p style={bodyStyle}>
+              <div className="about-body-stack" style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                <p className="about-body" style={bodyStyle}>
                   At the root of every successful product is a person - how they think, what
                   they want, why they do what they do. Scale that up and you have groups,
                   societies and economies, which is why I believe understanding people is the
                   starting point of building impactful products.
                 </p>
-                <p style={bodyStyle}>
+                <p className="about-body" style={bodyStyle}>
                   My background in psychology and organizational development helps me approach
                   product management with empathy, systems thinking, and a deep focus on human
                   behavior: specifically how and why people interact with the systems they
@@ -77,7 +79,7 @@ export default function About() {
                   of experience building and shipping tools that put this thinking into practice,
                   from 0 → 1.
                 </p>
-                <p style={bodyStyle}>
+                <p className="about-body" style={bodyStyle}>
                   One of the key builds here is Thoughtful, a natural language reminder tool
                   that integrates with Google Calendar, WhatsApp, and Google Meet, meeting
                   users where they are. Alongside that, I analyse consumer products through
@@ -123,6 +125,40 @@ export default function About() {
           .about-left,
           .about-right {
             width: 100%;
+            text-align: center;
+          }
+
+          .about-eyebrow {
+            font-size: 7px !important;
+          }
+
+          .about-heading {
+            font-size: clamp(22px, 3vw, 38px) !important;
+          }
+
+          .about-body {
+            font-size: clamp(11px, 1.2vw, 11px) !important;
+            max-width: 100% !important;
+            line-height: 1.7 !important;
+          }
+
+          .about-body-stack {
+            align-items: center;
+          }
+
+          .value-card {
+            border-left: none !important;
+            border-top: 2px solid var(--accent) !important;
+            text-align: center;
+            align-items: center;
+          }
+
+          .value-card-label {
+            font-size: 10px !important;
+          }
+
+          .value-card-desc {
+            font-size: 9px !important;
           }
         }
       `}</style>
@@ -133,6 +169,7 @@ export default function About() {
 function ValueCard({ label, description }: { label: string; description: string }) {
   return (
     <div
+      className="value-card"
       style={{
         borderLeft: "2px solid var(--accent)",
         padding: "16px 20px",
@@ -144,6 +181,7 @@ function ValueCard({ label, description }: { label: string; description: string 
       }}
     >
       <span
+        className="value-card-label"
         style={{
           fontFamily: "'Clash Display', sans-serif",
           fontSize: "16px",
@@ -155,6 +193,7 @@ function ValueCard({ label, description }: { label: string; description: string 
         {label}
       </span>
       <span
+        className="value-card-desc"
         style={{
           fontFamily: "'Satoshi', sans-serif",
           fontSize: "14px",

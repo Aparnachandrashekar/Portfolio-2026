@@ -7,6 +7,8 @@ export default function WorkCard({ project }: { project: Project }) {
   const isLink = href.startsWith("http");
   const hasDescription = Boolean(description);
   const cardWidth = isLandscape ? "360px" : "280px";
+  const orientClass = isLandscape ? "proj-card--landscape" : "proj-card--portrait";
+  const descClass = hasDescription ? " proj-card--desc" : "";
 
   const cardStyle = {
     "--card-width": cardWidth,
@@ -37,23 +39,7 @@ export default function WorkCard({ project }: { project: Project }) {
         }}
       />
 
-      <span
-        style={{
-          display: "inline-block",
-          alignSelf: "flex-start",
-          position: "relative",
-          fontFamily: "'Satoshi', sans-serif",
-          fontSize: "10px",
-          fontWeight: 600,
-          textTransform: "uppercase",
-          letterSpacing: "0.1em",
-          background: "rgba(0,0,0,0.28)",
-          borderRadius: "100px",
-          padding: "4px 10px",
-          backdropFilter: "blur(8px)",
-          color: "#fff",
-        }}
-      >
+      <span className="proj-card-badge">
         {inProgress ? "In progress" : category}
       </span>
 
@@ -69,15 +55,7 @@ export default function WorkCard({ project }: { project: Project }) {
         )}
 
         {issuer && (
-          <p
-            style={{
-              fontFamily: "'Satoshi', sans-serif",
-              fontSize: "12px",
-              fontWeight: 500,
-              opacity: 0.8,
-              margin: "0 0 6px",
-            }}
-          >
+          <p className="proj-card-issuer">
             {issuer}
           </p>
         )}
@@ -94,6 +72,22 @@ export default function WorkCard({ project }: { project: Project }) {
       </div>
 
       <style suppressHydrationWarning>{`
+        .proj-card-badge {
+          display: inline-block;
+          align-self: flex-start;
+          position: relative;
+          font-family: 'Satoshi', sans-serif;
+          font-size: 10px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          background: rgba(0,0,0,0.28);
+          border-radius: 100px;
+          padding: 4px 10px;
+          backdrop-filter: blur(8px);
+          color: #fff;
+        }
+
         .proj-card-title {
           font-family: 'Clash Display', sans-serif;
           font-size: ${isLandscape ? "20px" : "17px"};
@@ -112,6 +106,14 @@ export default function WorkCard({ project }: { project: Project }) {
           margin: 0 0 8px;
         }
 
+        .proj-card-issuer {
+          font-family: 'Satoshi', sans-serif;
+          font-size: 12px;
+          font-weight: 500;
+          opacity: 0.8;
+          margin: 0 0 6px;
+        }
+
         .proj-card-cta {
           font-family: 'Satoshi', sans-serif;
           font-size: 13px;
@@ -121,31 +123,63 @@ export default function WorkCard({ project }: { project: Project }) {
         }
 
         @media (max-width: 768px) {
+          .proj-card--landscape.proj-card--desc {
+            min-height: 204px !important;
+          }
+
+          .proj-card--landscape:not(.proj-card--desc) {
+            min-height: 180px !important;
+          }
+
+          .proj-card--portrait.proj-card--desc {
+            min-height: 180px !important;
+          }
+
+          .proj-card--portrait:not(.proj-card--desc) {
+            min-height: 168px !important;
+          }
+
+          .proj-card-badge {
+            font-size: 8px;
+            padding: 3px 7px;
+          }
+
           .proj-card-title {
-            font-size: ${isLandscape ? "18px" : "16px"};
+            font-size: ${isLandscape ? "12px" : "11px"};
             overflow-wrap: break-word;
           }
 
           .proj-card-desc {
-            font-size: 13px;
-            line-height: 1.5;
+            font-size: 9px;
+            line-height: 1.45;
             overflow-wrap: break-word;
+          }
+
+          .proj-card-issuer {
+            font-size: 9px;
+          }
+
+          .proj-card-cta {
+            font-size: 10px;
+            margin-top: 8px;
           }
         }
       `}</style>
     </>
   );
 
+  const cardClass = `proj-card ${orientClass}${descClass}`;
+
   if (isLink) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="proj-card" style={cardStyle}>
+      <a href={href} target="_blank" rel="noopener noreferrer" className={cardClass} style={cardStyle}>
         {inner}
       </a>
     );
   }
 
   return (
-    <div className="proj-card" style={cardStyle}>
+    <div className={cardClass} style={cardStyle}>
       {inner}
     </div>
   );

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import MobileSectionNav from "@/components/MobileSectionNav";
 import Cursor from "@/components/Cursor";
 import "./globals.css";
 
@@ -34,7 +35,10 @@ export default function RootLayout({
       <body className="antialiased">
         <Navbar />
         <Cursor />
-        <div style={{ paddingTop: "60px" }}>{children}</div>
+        <div style={{ paddingTop: "60px" }}>
+          <MobileSectionNav />
+          {children}
+        </div>
       </body>
     </html>
   );

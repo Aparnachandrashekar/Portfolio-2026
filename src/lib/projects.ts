@@ -108,14 +108,6 @@ export const WORK_ITEMS: Project[] = [
     orientation: 'landscape',
   },
   {
-    slug: 'nextleap-completion-cert',
-    title: 'NextLeap PM Fellowship — Completion Certificate',
-    description: 'Completion certification for the NextLeap Product Management Fellowship program.',
-    href: '#nextleap-fellowship',
-    category: 'Case Study',
-    orientation: 'landscape',
-  },
-  {
     slug: 'goodreads',
     title: 'Goodreads',
     description: 'A product teardown of Goodreads: analyzing why a platform with 150M+ users still feels stuck in 2009, and what it would take to fix it.',
@@ -192,7 +184,7 @@ export const CERTIFICATIONS: Project[] = [
   {
     slug: 'nextleap-fellowship',
     title: 'NextLeap PM Fellowship',
-    href: '/certificates/nextleap-top-fellow.pdf',
+    href: 'https://drive.google.com/file/d/1Qr0oYsNdYpTuLTrzjqi-K27dRdBeLGFj/view?usp=sharing',
     category: 'Certification',
     orientation: 'landscape',
     issuer: 'NextLeap',

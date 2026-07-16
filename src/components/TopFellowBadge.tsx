@@ -28,9 +28,7 @@ export default function TopFellowBadge() {
 
       <style suppressHydrationWarning>{`
         .top-fellow-badge {
-          position: absolute;
-          bottom: 24px;
-          right: 24px;
+          flex-shrink: 0;
           width: 72px;
           height: 72px;
           pointer-events: none;

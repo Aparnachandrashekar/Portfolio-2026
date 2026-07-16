@@ -21,7 +21,8 @@ export default function WorkCard({ project }: { project: Project }) {
     overflow: "hidden",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-between",
+    justifyContent: showTopFellow ? "flex-start" : "space-between",
+    gap: showTopFellow ? "16px" : undefined,
     padding: "22px",
     textDecoration: "none",
     color: "#fff",
@@ -54,9 +55,12 @@ export default function WorkCard({ project }: { project: Project }) {
 
       <div className="proj-card-body">
         <div className="proj-card-copy">
-          <p className="proj-card-title">
-            {title}
-          </p>
+          <div className={showTopFellow ? "proj-card-title-row" : undefined}>
+            <p className="proj-card-title">
+              {title}
+            </p>
+            {showTopFellow && <TopFellowBadge />}
+          </div>
 
           {description && (
             <p className="proj-card-desc">
@@ -85,8 +89,6 @@ export default function WorkCard({ project }: { project: Project }) {
           ) : null}
         </div>
       </div>
-
-      {showTopFellow && <TopFellowBadge />}
 
       <style suppressHydrationWarning>{`
         .proj-card-badges {
@@ -125,6 +127,20 @@ export default function WorkCard({ project }: { project: Project }) {
         }
 
         .proj-card-copy {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .proj-card-title-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          margin-bottom: 6px;
+        }
+
+        .proj-card-title-row .proj-card-title {
+          margin-bottom: 0;
           flex: 1;
           min-width: 0;
         }

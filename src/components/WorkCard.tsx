@@ -2,10 +2,12 @@ import { CATEGORY_ACCENT, type Project } from "@/lib/projects";
 import TopFellowBadge from "@/components/TopFellowBadge";
 
 export default function WorkCard({ project }: { project: Project }) {
-  const { title, description, href, category, orientation, issuer, inProgress, series, honor } = project;
+  const { slug, title, description, href, category, orientation, issuer, inProgress, series, honor } = project;
   const accent = CATEGORY_ACCENT[category];
   const isLandscape = orientation === "landscape";
-  const isLink = Boolean(href) && (href.startsWith("http") || href.startsWith("/"));
+  const isExternalLink = Boolean(href) && (href.startsWith("http") || (href.startsWith("/") && !href.startsWith("/#")));
+  const isAnchorLink = Boolean(href) && href.startsWith("#");
+  const isLink = isExternalLink || isAnchorLink;
   const hasDescription = Boolean(description);
   const showTopFellow = honor === "Top Fellow";
   const cardWidth = isLandscape ? "360px" : "280px";
@@ -78,7 +80,7 @@ export default function WorkCard({ project }: { project: Project }) {
             </span>
           ) : isLink ? (
             <span className="proj-card-cta">
-              View ↗
+              {isAnchorLink ? "See certificate ↓" : "View ↗"}
             </span>
           ) : null}
         </div>
@@ -195,14 +197,21 @@ export default function WorkCard({ project }: { project: Project }) {
 
   if (isLink) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="proj-card" style={cardStyle}>
+      <a
+        id={slug}
+        href={href}
+        target={isExternalLink ? "_blank" : undefined}
+        rel={isExternalLink ? "noopener noreferrer" : undefined}
+        className="proj-card"
+        style={cardStyle}
+      >
         {inner}
       </a>
     );
   }
 
   return (
-    <div className="proj-card" style={cardStyle}>
+    <div id={slug} className="proj-card" style={cardStyle}>
       {inner}
     </div>
   );

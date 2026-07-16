@@ -151,19 +151,21 @@ export default function About() {
           }
 
           .about-value-stack {
-            align-items: flex-start;
+            align-items: stretch;
             width: 100%;
             gap: 12px !important;
           }
 
           .value-card {
-            width: fit-content;
-            max-width: calc(100% - 0px);
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 100px;
             padding: 11px 14px !important;
             border-left: 2px solid var(--accent) !important;
             border-top: none !important;
             text-align: left;
             align-items: flex-start;
+            justify-content: flex-start;
             gap: 4px !important;
           }
 

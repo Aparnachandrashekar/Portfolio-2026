@@ -1,16 +1,18 @@
 import { CATEGORY_ACCENT, type Project } from "@/lib/projects";
+import TopFellowBadge from "@/components/TopFellowBadge";
 
 export default function WorkCard({ project }: { project: Project }) {
-  const { title, description, href, category, orientation, issuer, inProgress } = project;
+  const { title, description, href, category, orientation, issuer, inProgress, series, honor } = project;
   const accent = CATEGORY_ACCENT[category];
   const isLandscape = orientation === "landscape";
-  const isLink = href.startsWith("http");
+  const isLink = Boolean(href) && (href.startsWith("http") || href.startsWith("/"));
   const hasDescription = Boolean(description);
+  const showTopFellow = honor === "Top Fellow";
   const cardWidth = isLandscape ? "360px" : "280px";
 
   const cardStyle = {
     "--card-width": cardWidth,
-    minHeight: hasDescription ? "340px" : "300px",
+    minHeight: hasDescription ? "340px" : showTopFellow ? "320px" : "300px",
     borderRadius: "22px",
     background: accent,
     position: "relative",
@@ -37,43 +39,65 @@ export default function WorkCard({ project }: { project: Project }) {
         }}
       />
 
-      <span className="proj-card-badge">
-        {inProgress ? "In progress" : category}
-      </span>
-
-      <div style={{ position: "relative" }}>
-        <p className="proj-card-title">
-          {title}
-        </p>
-
-        {description && (
-          <p className="proj-card-desc">
-            {description}
-          </p>
-        )}
-
-        {issuer && (
-          <p className="proj-card-issuer">
-            {issuer}
-          </p>
-        )}
-
-        {inProgress ? (
-          <span className="proj-card-cta">
-            March – June 2026
+      <div className="proj-card-badges">
+        <span className="proj-card-badge">
+          {inProgress ? "In progress" : category}
+        </span>
+        {series && (
+          <span className="proj-card-badge proj-card-badge--series">
+            {series}
           </span>
-        ) : isLink ? (
-          <span className="proj-card-cta">
-            View ↗
-          </span>
-        ) : null}
+        )}
+      </div>
+
+      <div className={`proj-card-body${showTopFellow ? " proj-card-body--honor" : ""}`}>
+        <div className="proj-card-copy">
+          <p className="proj-card-title">
+            {title}
+          </p>
+
+          {description && (
+            <p className="proj-card-desc">
+              {description}
+            </p>
+          )}
+
+          {issuer && (
+            <p className="proj-card-issuer">
+              {issuer}
+            </p>
+          )}
+
+          {honor && !showTopFellow && (
+            <span className="proj-card-honor-label">{honor}</span>
+          )}
+
+          {inProgress ? (
+            <span className="proj-card-cta">
+              March – June 2026
+            </span>
+          ) : isLink ? (
+            <span className="proj-card-cta">
+              View ↗
+            </span>
+          ) : null}
+        </div>
+
+        {showTopFellow && <TopFellowBadge />}
       </div>
 
       <style suppressHydrationWarning>{`
+        .proj-card-badges {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 6px;
+          position: relative;
+        }
+
         .proj-card-badge {
           display: inline-block;
           align-self: flex-start;
-          position: relative;
           font-family: 'Satoshi', sans-serif;
           font-size: 10px;
           font-weight: 600;
@@ -84,6 +108,30 @@ export default function WorkCard({ project }: { project: Project }) {
           padding: 4px 10px;
           backdrop-filter: blur(8px);
           color: #fff;
+        }
+
+        .proj-card-badge--series {
+          text-transform: none;
+          letter-spacing: 0.04em;
+          font-weight: 500;
+          background: rgba(0,0,0,0.18);
+          opacity: 0.9;
+        }
+
+        .proj-card-body {
+          position: relative;
+        }
+
+        .proj-card-body--honor {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+        }
+
+        .proj-card-copy {
+          flex: 1;
+          min-width: 0;
         }
 
         .proj-card-title {
@@ -110,6 +158,15 @@ export default function WorkCard({ project }: { project: Project }) {
           font-weight: 500;
           opacity: 0.8;
           margin: 0 0 6px;
+        }
+
+        .proj-card-honor-label {
+          font-family: 'Satoshi', sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          opacity: 0.9;
+          display: block;
+          margin-top: 4px;
         }
 
         .proj-card-cta {

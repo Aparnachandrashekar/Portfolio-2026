@@ -37,13 +37,13 @@ body {
 
 @media (max-width: 768px) {
   :root {
-    --section-pad-y: 56px;
-    --page-pad: 7px;
-    --mobile-gutter: 7px;
+    --section-pad-y: 64px;
+    --page-pad: 20px;
+    --mobile-gutter: 20px;
   }
 
   .proj-card {
-    flex: 0 0 min(var(--card-width, 300px), calc(100vw - 14px)) !important;
+    flex: 0 0 min(var(--card-width, 300px), calc(100vw - 2 * var(--page-pad))) !important;
     min-height: auto !important;
     scroll-snap-align: start;
   }
@@ -52,8 +52,8 @@ body {
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     cursor: default !important;
-    scroll-padding-left: 7px;
-    scroll-padding-right: 7px;
+    scroll-padding-left: var(--page-pad);
+    scroll-padding-right: var(--page-pad);
   }
 
   .work-filters {
@@ -90,7 +90,7 @@ body {
   }
 
   .proj-card {
-    flex: 0 0 min(var(--card-width, 300px), calc(100vw - 14px)) !important;
+    flex: 0 0 min(var(--card-width, 300px), calc(100vw - 2 * var(--page-pad))) !important;
     max-width: none;
   }
 }

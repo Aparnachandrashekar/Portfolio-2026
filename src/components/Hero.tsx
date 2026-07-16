@@ -169,7 +169,7 @@ export default function Hero() {
             flex: 1;
             display: flex;
             align-items: center;
-            padding: 16px 7px 0;
+            padding: 16px var(--page-pad) 0;
           }
 
           .hero-copy {
@@ -217,7 +217,7 @@ export default function Hero() {
             flex-direction: row;
             align-items: center;
             gap: 6px;
-            margin: 0 7px 28px;
+            margin: 0 var(--page-pad) 32px;
             padding: 0;
             text-decoration: none;
             color: var(--text-secondary);

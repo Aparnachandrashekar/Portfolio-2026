@@ -124,8 +124,8 @@ export default function Navbar() {
           .hamburger { display: flex !important; }
 
           .site-header {
-            padding-left: max(7px, env(safe-area-inset-left)) !important;
-            padding-right: max(7px, env(safe-area-inset-right)) !important;
+            padding-left: max(var(--page-pad), env(safe-area-inset-left)) !important;
+            padding-right: max(var(--page-pad), env(safe-area-inset-right)) !important;
           }
 
           .mobile-nav-backdrop {

@@ -19,6 +19,8 @@ export type Project = {
   orientation: CardOrientation;
   inProgress?: boolean;
   issuer?: string;
+  series?: string;
+  honor?: string;
 };
 
 export const RESUME_URL = 'https://canva.link/c3qgcbhuqnj3jqn';
@@ -78,6 +80,24 @@ export const WORK_ITEMS: Project[] = [
     href: 'https://next-leap-cursor.vercel.app',
     category: 'Build Project',
     orientation: 'landscape',
+  },
+  {
+    slug: 'axis-music-discovery',
+    title: 'Axis — Music Discovery',
+    description: 'Axis is an AI music discovery MVP in a Spotify-style shell. Pick an anchor song and choose how “similar” is defined — beat, mood, or lyrics — then get ranked recommendations with short reasons via Groq LLM and the Spotify API.',
+    href: 'https://spotify-graduation-project.vercel.app',
+    category: 'Build Project',
+    orientation: 'landscape',
+    series: 'Graduation · Axis',
+  },
+  {
+    slug: 'axis-review-engine',
+    title: 'Axis — Review Intelligence',
+    description: 'A RAG research tool built on 15,000+ scraped App Store and Play Store Spotify reviews — ask conversational questions about what users feel, want, and struggle with.',
+    href: 'https://voc-intelligence-platform-eight.vercel.app/ask',
+    category: 'Build Project',
+    orientation: 'landscape',
+    series: 'Graduation · Axis',
   },
 
   // Case Studies
@@ -155,12 +175,20 @@ export const WORK_ITEMS: Project[] = [
 ];
 
 export const CERTIFICATIONS: Project[] = [
+  {
+    slug: 'nextleap-fellowship',
+    title: 'NextLeap PM Fellowship',
+    href: '/certificates/nextleap-top-fellow.pdf',
+    category: 'Certification',
+    orientation: 'landscape',
+    issuer: 'NextLeap',
+    honor: 'Top Fellow',
+  },
   { slug: 'iiba-pm-guide',       title: 'Product Management: A Complete Guide', href: 'https://www.linkedin.com/learning/certificates/9a1de7cf75c80ad8a31d984dbca2fce1cb6d6ecd940289c4ea81a3ca2fc6d1d9?trk=share_certificate', category: 'Certification', orientation: 'landscape', issuer: 'IIBA' },
   { slug: 'ibm-cert',            title: 'Product Management Certification',   href: 'https://www.coursera.org/account/accomplishments/verify/LFRPLH0UXXY7?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=sharing_cta&utm_product=course', category: 'Certification', orientation: 'landscape', issuer: 'IBM' },
   { slug: 'hackerrank-sql',      title: 'SQL Basic',                            href: 'https://www.hackerrank.com/certificates/iframe/6a0d12c5823b', category: 'Certification', orientation: 'landscape', issuer: 'HackerRank' },
   { slug: 'pendo-cert',          title: 'Radical Product Thinking',           href: 'https://www.credly.com/badges/b22b275d-c067-42bf-8b74-2f52a4983713/public_url', category: 'Certification', orientation: 'landscape', issuer: 'Pendo' },
   { slug: 'linkedin-tech-pm',    title: 'Technology for Product Managers',    href: 'https://www.linkedin.com/learning/certificates/892ac3aafda3bc5c175ae0c6b4b34f887b4849474d524e0b7ca29f524ab3f091', category: 'Certification', orientation: 'landscape', issuer: 'LinkedIn Learning' },
-  { slug: 'nextleap-fellowship', title: 'NextLeap PM Fellowship',             href: '', category: 'Certification', orientation: 'landscape', inProgress: true },
 ];
 
 /** All items — used by work detail routes */

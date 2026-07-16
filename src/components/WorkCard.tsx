@@ -52,7 +52,7 @@ export default function WorkCard({ project }: { project: Project }) {
         )}
       </div>
 
-      <div className={`proj-card-body${showTopFellow ? " proj-card-body--honor" : ""}`}>
+      <div className="proj-card-body">
         <div className="proj-card-copy">
           <p className="proj-card-title">
             {title}
@@ -84,9 +84,9 @@ export default function WorkCard({ project }: { project: Project }) {
             </span>
           ) : null}
         </div>
-
-        {showTopFellow && <TopFellowBadge />}
       </div>
+
+      {showTopFellow && <TopFellowBadge />}
 
       <style suppressHydrationWarning>{`
         .proj-card-badges {
@@ -122,13 +122,6 @@ export default function WorkCard({ project }: { project: Project }) {
 
         .proj-card-body {
           position: relative;
-        }
-
-        .proj-card-body--honor {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 12px;
         }
 
         .proj-card-copy {

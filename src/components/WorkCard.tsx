@@ -14,23 +14,122 @@ export default function WorkCard({ project }: { project: Project }) {
 
   const cardStyle = {
     "--card-width": cardWidth,
-    minHeight: hasDescription ? "340px" : showTopFellow ? "320px" : "300px",
+    minHeight: hasDescription ? "340px" : "300px",
     borderRadius: "22px",
     background: accent,
     position: "relative",
     overflow: "hidden",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: showTopFellow ? "flex-start" : "space-between",
-    gap: showTopFellow ? "16px" : undefined,
-    padding: "22px",
+    display: showTopFellow ? "block" : "flex",
+    flexDirection: showTopFellow ? undefined : "column",
+    justifyContent: showTopFellow ? undefined : "space-between",
+    height: showTopFellow ? "100%" : undefined,
+    padding: showTopFellow ? "0" : "22px",
     textDecoration: "none",
     color: "#fff",
     cursor: isLink ? "pointer" : "default",
     opacity: inProgress ? 0.92 : 1,
   } as React.CSSProperties;
 
-  const inner = (
+  const topFellowInner = (
+    <>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          background:
+            "radial-gradient(ellipse at 15% 15%, rgba(255,255,255,0.14) 0%, transparent 65%)",
+        }}
+      />
+
+      <span className="proj-card-badge proj-card-badge--honor-pill">
+        {category}
+      </span>
+
+      <TopFellowBadge />
+
+      <div className="proj-card-footer">
+        <p className="proj-card-title">{title}</p>
+        {issuer && <p className="proj-card-issuer">{issuer}</p>}
+        {isLink && (
+          <span className="proj-card-cta">
+            {isAnchorLink ? "See certificate ↓" : "View ↗"}
+          </span>
+        )}
+      </div>
+
+      <style suppressHydrationWarning>{`
+        .proj-card--top-fellow .proj-card-badge {
+          display: inline-block;
+          font-family: 'Satoshi', sans-serif;
+          font-size: 10px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          background: rgba(0,0,0,0.28);
+          border-radius: 100px;
+          padding: 4px 10px;
+          backdrop-filter: blur(8px);
+          color: #fff;
+        }
+
+        .proj-card--top-fellow .proj-card-badge--honor-pill {
+          position: absolute;
+          top: 16px;
+          left: 16px;
+        }
+
+        .proj-card--top-fellow .top-fellow-badge {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+        }
+
+        .proj-card--top-fellow .proj-card-footer {
+          position: absolute;
+          bottom: 24px;
+          left: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .proj-card--top-fellow .proj-card-title {
+          font-family: 'Clash Display', sans-serif;
+          font-size: ${isLandscape ? "20px" : "17px"};
+          font-weight: 600;
+          line-height: 1.25;
+          letter-spacing: -0.01em;
+          margin: 0;
+        }
+
+        .proj-card--top-fellow .proj-card-issuer {
+          font-family: 'Satoshi', sans-serif;
+          font-size: 12px;
+          font-weight: 500;
+          opacity: 0.8;
+          margin: 0;
+        }
+
+        .proj-card--top-fellow .proj-card-cta {
+          font-family: 'Satoshi', sans-serif;
+          font-size: 13px;
+          font-weight: 700;
+          margin: 0;
+          display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+          .proj-card--top-fellow .proj-card-title {
+            font-size: ${isLandscape ? "18px" : "16px"};
+            overflow-wrap: break-word;
+          }
+        }
+      `}</style>
+    </>
+  );
+
+  const defaultInner = (
     <>
       <div
         style={{
@@ -55,12 +154,9 @@ export default function WorkCard({ project }: { project: Project }) {
 
       <div className="proj-card-body">
         <div className="proj-card-copy">
-          <div className={showTopFellow ? "proj-card-title-row" : undefined}>
-            <p className="proj-card-title">
-              {title}
-            </p>
-            {showTopFellow && <TopFellowBadge />}
-          </div>
+          <p className="proj-card-title">
+            {title}
+          </p>
 
           {description && (
             <p className="proj-card-desc">
@@ -131,20 +227,6 @@ export default function WorkCard({ project }: { project: Project }) {
           min-width: 0;
         }
 
-        .proj-card-title-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 12px;
-          margin-bottom: 6px;
-        }
-
-        .proj-card-title-row .proj-card-title {
-          margin-bottom: 0;
-          flex: 1;
-          min-width: 0;
-        }
-
         .proj-card-title {
           font-family: 'Clash Display', sans-serif;
           font-size: ${isLandscape ? "20px" : "17px"};
@@ -204,6 +286,10 @@ export default function WorkCard({ project }: { project: Project }) {
     </>
   );
 
+  const inner = showTopFellow ? topFellowInner : defaultInner;
+
+  const cardClassName = showTopFellow ? "proj-card proj-card--top-fellow" : "proj-card";
+
   if (isLink) {
     return (
       <a
@@ -211,7 +297,7 @@ export default function WorkCard({ project }: { project: Project }) {
         href={href}
         target={isExternalLink ? "_blank" : undefined}
         rel={isExternalLink ? "noopener noreferrer" : undefined}
-        className="proj-card"
+        className={cardClassName}
         style={cardStyle}
       >
         {inner}
@@ -220,7 +306,7 @@ export default function WorkCard({ project }: { project: Project }) {
   }
 
   return (
-    <div id={slug} className="proj-card" style={cardStyle}>
+    <div id={slug} className={cardClassName} style={cardStyle}>
       {inner}
     </div>
   );

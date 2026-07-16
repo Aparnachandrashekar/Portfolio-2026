@@ -19,18 +19,19 @@ export default function WorkCard({ project }: { project: Project }) {
     background: accent,
     position: "relative",
     overflow: "hidden",
-    display: showTopFellow ? "block" : "flex",
-    flexDirection: showTopFellow ? undefined : "column",
-    justifyContent: showTopFellow ? undefined : "space-between",
-    height: showTopFellow ? "100%" : undefined,
-    padding: showTopFellow ? "0" : "22px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    padding: "22px",
     textDecoration: "none",
     color: "#fff",
     cursor: isLink ? "pointer" : "default",
     opacity: inProgress ? 0.92 : 1,
   } as React.CSSProperties;
 
-  const topFellowInner = (
+  const cardClassName = showTopFellow ? "proj-card proj-card--top-fellow" : "proj-card";
+
+  const inner = (
     <>
       <div
         style={{
@@ -42,104 +43,7 @@ export default function WorkCard({ project }: { project: Project }) {
         }}
       />
 
-      <span className="proj-card-badge proj-card-badge--honor-pill">
-        {category}
-      </span>
-
-      <TopFellowBadge />
-
-      <div className="proj-card-footer">
-        <p className="proj-card-title">{title}</p>
-        {issuer && <p className="proj-card-issuer">{issuer}</p>}
-        {isLink && (
-          <span className="proj-card-cta">
-            {isAnchorLink ? "See certificate ↓" : "View ↗"}
-          </span>
-        )}
-      </div>
-
-      <style suppressHydrationWarning>{`
-        .proj-card--top-fellow .proj-card-badge {
-          display: inline-block;
-          font-family: 'Satoshi', sans-serif;
-          font-size: 10px;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.1em;
-          background: rgba(0,0,0,0.28);
-          border-radius: 100px;
-          padding: 4px 10px;
-          backdrop-filter: blur(8px);
-          color: #fff;
-        }
-
-        .proj-card--top-fellow .proj-card-badge--honor-pill {
-          position: absolute;
-          top: 16px;
-          left: 16px;
-        }
-
-        .proj-card--top-fellow .top-fellow-badge {
-          position: absolute;
-          top: 16px;
-          right: 16px;
-        }
-
-        .proj-card--top-fellow .proj-card-footer {
-          position: absolute;
-          bottom: 24px;
-          left: 20px;
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-        }
-
-        .proj-card--top-fellow .proj-card-title {
-          font-family: 'Clash Display', sans-serif;
-          font-size: ${isLandscape ? "20px" : "17px"};
-          font-weight: 600;
-          line-height: 1.25;
-          letter-spacing: -0.01em;
-          margin: 0;
-        }
-
-        .proj-card--top-fellow .proj-card-issuer {
-          font-family: 'Satoshi', sans-serif;
-          font-size: 12px;
-          font-weight: 500;
-          opacity: 0.8;
-          margin: 0;
-        }
-
-        .proj-card--top-fellow .proj-card-cta {
-          font-family: 'Satoshi', sans-serif;
-          font-size: 13px;
-          font-weight: 700;
-          margin: 0;
-          display: inline-block;
-        }
-
-        @media (max-width: 768px) {
-          .proj-card--top-fellow .proj-card-title {
-            font-size: ${isLandscape ? "18px" : "16px"};
-            overflow-wrap: break-word;
-          }
-        }
-      `}</style>
-    </>
-  );
-
-  const defaultInner = (
-    <>
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          background:
-            "radial-gradient(ellipse at 15% 15%, rgba(255,255,255,0.14) 0%, transparent 65%)",
-        }}
-      />
+      {showTopFellow && <TopFellowBadge />}
 
       <div className="proj-card-badges">
         <span className="proj-card-badge">
@@ -187,6 +91,26 @@ export default function WorkCard({ project }: { project: Project }) {
       </div>
 
       <style suppressHydrationWarning>{`
+        .proj-card {
+          outline: none;
+          border: none;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        .proj-card:focus,
+        .proj-card:focus-visible,
+        .proj-card:target {
+          outline: none;
+          box-shadow: none;
+        }
+
+        .proj-card--top-fellow .top-fellow-badge {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          z-index: 1;
+        }
+
         .proj-card-badges {
           display: flex;
           flex-direction: column;
@@ -285,10 +209,6 @@ export default function WorkCard({ project }: { project: Project }) {
       `}</style>
     </>
   );
-
-  const inner = showTopFellow ? topFellowInner : defaultInner;
-
-  const cardClassName = showTopFellow ? "proj-card proj-card--top-fellow" : "proj-card";
 
   if (isLink) {
     return (

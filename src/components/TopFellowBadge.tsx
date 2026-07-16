@@ -32,7 +32,6 @@ export default function TopFellowBadge() {
           width: 72px;
           height: 72px;
           pointer-events: none;
-          filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
         }
 
         .top-fellow-badge__seal {
